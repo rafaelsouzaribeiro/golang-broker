@@ -1,8 +1,6 @@
 package producer
 
 import (
-	"fmt"
-
 	"github.com/IBM/sarama"
 )
 
@@ -38,18 +36,10 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) error {
 
 	(*producer).Input() <- message
 
-	select {
-	case success := <-(*producer).Successes():
-		value, err := success.Value.Encode()
-		if err != nil {
-			fmt.Println("Error encoding message:", err)
-			return err
-		}
+	err := <-(*producer).Errors()
 
-		fmt.Println("Mensagem produzida:", string(value))
-	case err := <-(*producer).Errors():
-		fmt.Println("Falho para mensagem produzida:", err)
-		return err
+	if err != nil {
+		panic(err)
 	}
 
 	return nil
