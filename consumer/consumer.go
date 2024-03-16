@@ -77,11 +77,10 @@ func (p *ConsumerGroupHandler) VerifyConsumer(client sarama.ConsumerGroup) (cont
 func (p *ConsumerGroupHandler) VerifyError(client sarama.ConsumerGroup) {
 
 	go func() {
-		defer close(p.errors)
-
 		err := <-client.Errors()
 		if err != nil {
 			p.errors <- err
+			close(p.errors)
 		}
 	}()
 
