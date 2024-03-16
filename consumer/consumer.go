@@ -2,6 +2,7 @@ package consumer
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/IBM/sarama"
 )
@@ -74,14 +75,16 @@ func (p *ConsumerGroupHandler) VerifyConsumer(client sarama.ConsumerGroup) (cont
 
 }
 
-func (p *ConsumerGroupHandler) VerifyError(client sarama.ConsumerGroup) error {
+func (p *ConsumerGroupHandler) VerifyError(client sarama.ConsumerGroup) {
 
-	for err := range client.Errors() {
-		if err != nil {
-			return err
+	go func() {
+		for err := range client.Errors() {
+			if err != nil {
+				fmt.Printf("consumer error: %s \n", err)
+			}
+
 		}
-
-	}
+	}()
 
 	// go func() {
 	// 	for {
@@ -102,5 +105,5 @@ func (p *ConsumerGroupHandler) VerifyError(client sarama.ConsumerGroup) error {
 	// 	return err // Assuming you want to stop after receiving the first error
 	// }
 
-	return nil
+	// return nil
 }

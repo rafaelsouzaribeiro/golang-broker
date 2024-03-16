@@ -1,6 +1,8 @@
 package producer
 
 import (
+	"fmt"
+
 	"github.com/IBM/sarama"
 )
 
@@ -31,17 +33,19 @@ func (p *Producer) GetProducer() (*sarama.AsyncProducer, error) {
 	return &producer, err
 }
 
-func (p *Producer) SendMessage(producer *sarama.AsyncProducer) error {
+func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 	message := &sarama.ProducerMessage{Topic: p.topic, Value: p.message}
 
 	(*producer).Input() <- message
 
-	for err := range (*producer).Errors() {
-		if err != nil {
-			return err
-		}
+	go func() {
+		for err := range (*producer).Errors() {
+			if err != nil {
+				fmt.Printf("Failed for message produced: %s \n", message.Value)
+			}
 
-	}
+		}
+	}()
 
 	// select {
 	// case success := <-(*producer).Successes():
@@ -57,5 +61,5 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) error {
 	// 	return err
 	// }
 
-	return nil
+	// return nil
 }
