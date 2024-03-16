@@ -9,7 +9,6 @@ import (
 type MessageCallback func(messages []string)
 
 type ConsumerGroupHandler struct {
-	errors   chan error
 	brokers  []string
 	groupId  string
 	topics   []string
@@ -30,6 +29,7 @@ func (c *ConsumerGroupHandler) Setup(s sarama.ConsumerGroupSession) error {
 func (c *ConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 
 	for msg := range claim.Messages() {
+
 		messages := []string{string(msg.Value)}
 		c.callback(messages)
 		session.MarkMessage(msg, "") // Marca a mensagem como processada
@@ -45,7 +45,6 @@ func NewConsumer(brokers []string, groupId string, topics []string, config *sara
 		groupId:  groupId,
 		topics:   topics,
 		config:   config,
-		errors:   make(chan error),
 		callback: callback,
 	}
 }
@@ -72,21 +71,36 @@ func (p *ConsumerGroupHandler) VerifyConsumer(client sarama.ConsumerGroup) (cont
 	}
 
 	return cancel, nil
+
 }
 
-func (p *ConsumerGroupHandler) VerifyError(client sarama.ConsumerGroup) {
+func (p *ConsumerGroupHandler) VerifyError(client sarama.ConsumerGroup) error {
 
-	go func() {
-		err := <-client.Errors()
+	for err := range client.Errors() {
 		if err != nil {
-			p.errors <- err
-			close(p.errors)
+			return err
 		}
-	}()
 
-	err := <-p.errors
-
-	if err != nil {
-		panic(err)
 	}
+
+	// go func() {
+	// 	for {
+	// 		err := <-client.Errors()
+	// 		if err != nil {
+	// 			// Se houver um erro, feche o canal de erros e encerre a goroutine
+	// 			fmt.Println("Ocorreu algum erro")
+
+	// 			p.errors <- err
+	// 			close(p.errors)
+	// 			return
+	// 		}
+	// 	}
+	// }()
+
+	// for err := range p.errors {
+	// 	fmt.Println(err.Error())
+	// 	return err // Assuming you want to stop after receiving the first error
+	// }
+
+	return nil
 }
