@@ -35,7 +35,7 @@ func Producer() {
 
 ```
 
-<strong>Version v1.3.0</strong>
+<strong>Version v1.3.0 or latest</strong>
 <br />
 <strong>Run in separate terminal:</strong>
 <br />
