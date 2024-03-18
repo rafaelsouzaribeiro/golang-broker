@@ -35,11 +35,10 @@ func Producer() {
 
 ```
 
-<strong>Version v1.3.0 or latest</strong>
 <br />
 <strong>Run in separate terminal:</strong>
 <br />
-<strong>Consumer</strong>
+<strong>Consumer: Version v1.3.0 or latest</strong>
 <br />
 
 ```go
@@ -98,7 +97,7 @@ func Consumer() {
 ```
 
 <br />
-<strong>Producer</strong>
+<strong>Producer: Version v1.3.0</strong>
 <br />
 
 ```go
