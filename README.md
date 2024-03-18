@@ -1,6 +1,6 @@
 <strong>Version v1.3.0</strong>
 <br />
-<strong>Run consumer and producer on the same terminal:</strong>
+<strong>How do I run it in the same terminal?:</strong>
 ```go
 package main
 
@@ -89,11 +89,12 @@ func Producer() {
 }
 ```
 
-<strong>Run in separate terminal</strong>
+<strong>How do I run it in a separate terminal?:</strong>
 <br />
 <strong>Consumer</strong>
 <br />
 ```go
+
 package main
 
 import (
@@ -151,6 +152,7 @@ func Consumer() {
 <strong>Producer</strong>
 <br />
 ```go
+
 package main
 
 import (
