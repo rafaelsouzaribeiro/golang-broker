@@ -100,7 +100,7 @@ func Consumer() {
 <br />
 <strong>Producer: Version v1.3.0</strong>
 <br />
-</strong>[New Version](#custom_anchor_name)</strong>
+[New Version](#custom_anchor_name)
 
 ```go
 
