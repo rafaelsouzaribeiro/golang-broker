@@ -1,6 +1,7 @@
 <strong>version v1.4.0</strong>
 <br />
-<strong>added message failure:</strong>
+<strong>Producer: added message failure:</strong>
+<a name="custom_anchor_name"></a>
 <br />
 
 ```go
@@ -99,6 +100,7 @@ func Consumer() {
 <br />
 <strong>Producer: Version v1.3.0</strong>
 <br />
+</strong>[New Version](#custom_anchor_name)</strong>
 
 ```go
 
