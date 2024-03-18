@@ -37,7 +37,7 @@ func Consumer() {
 	con := consumer.NewConsumer([]string{"springboot:9092"}, "contact-adm",
 		[]string{"contact-adm-insert"}, config, func(messages []string) {
 			// Processe as mensagens recebidas aqui
-			fmt.Println("Mensagens recebidas:", messages[0])
+			fmt.Println("Message received:", messages[0])
 		})
 
 	client, err := con.GetConsumer()
