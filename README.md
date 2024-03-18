@@ -1,3 +1,40 @@
+<strong>version v1.4.0</strong>
+<br />
+<strong>added message failure:</strong>
+<br />
+
+```go
+
+func Producer() {
+	config := sarama.NewConfig()
+	config.Producer.RequiredAcks = sarama.WaitForAll
+	config.Producer.Retry.Max = 5
+	config.Producer.Return.Successes = true
+	message := []byte("Hello World!")
+
+	produc := producer.NewProducer([]string{"springboot:9092"}, "contact-adm-insert",
+		sarama.ByteEncoder(message), config, func(messages string) {
+			fmt.Println("Message failure:", messages)
+		})
+	prod, err := produc.GetProducer()
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer func() {
+		if err := (*prod).Close(); err != nil {
+			panic(err)
+		}
+	}()
+
+	produc.SendMessage(prod)
+
+}
+
+
+```
+
 <strong>Version v1.3.0</strong>
 <br />
 <strong>Run in separate terminal:</strong>

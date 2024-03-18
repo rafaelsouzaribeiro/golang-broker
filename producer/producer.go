@@ -6,19 +6,23 @@ import (
 	"github.com/IBM/sarama"
 )
 
+type MessageCallback func(messages string)
+
 type Producer struct {
-	addrs   []string
-	topic   string
-	message sarama.Encoder
-	config  *sarama.Config
+	addrs    []string
+	topic    string
+	message  sarama.Encoder
+	config   *sarama.Config
+	callback MessageCallback
 }
 
-func NewProducer(addrs []string, topic string, message sarama.Encoder, config *sarama.Config) *Producer {
+func NewProducer(addrs []string, topic string, message sarama.Encoder, config *sarama.Config, callback MessageCallback) *Producer {
 	return &Producer{
-		addrs:   addrs,
-		topic:   topic,
-		message: message,
-		config:  config,
+		addrs:    addrs,
+		topic:    topic,
+		message:  message,
+		config:   config,
+		callback: callback,
 	}
 }
 
@@ -27,6 +31,7 @@ func (p *Producer) GetProducer() (*sarama.AsyncProducer, error) {
 	producer, err := sarama.NewAsyncProducer(p.addrs, p.config)
 
 	if err != nil {
+		p.callback(p.GetErrorMessage())
 		return nil, err
 	}
 
@@ -34,6 +39,7 @@ func (p *Producer) GetProducer() (*sarama.AsyncProducer, error) {
 }
 
 func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
+
 	message := &sarama.ProducerMessage{Topic: p.topic, Value: p.message}
 
 	(*producer).Input() <- message
@@ -41,6 +47,7 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 	go func() {
 		for err := range (*producer).Errors() {
 			if err != nil {
+				p.callback(p.GetErrorMessage())
 				fmt.Printf("Failed for message produced: %s \n", message.Value)
 			}
 
@@ -62,4 +69,10 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 	// }
 
 	// return nil
+}
+
+func (p *Producer) GetErrorMessage() string {
+	value, _ := p.message.Encode()
+
+	return string(value)
 }
