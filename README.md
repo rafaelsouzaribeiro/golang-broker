@@ -1,6 +1,7 @@
 <strong>Version v1.3.0</strong>
 <br />
 <strong>How do I run it in the same terminal?:</strong>
+
 ```go
 package main
 
@@ -93,6 +94,7 @@ func Producer() {
 <br />
 <strong>Consumer</strong>
 <br />
+
 ```go
 
 package main
@@ -151,6 +153,7 @@ func Consumer() {
 <br />
 <strong>Producer</strong>
 <br />
+
 ```go
 
 package main
