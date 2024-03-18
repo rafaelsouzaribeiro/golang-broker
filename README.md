@@ -1,7 +1,7 @@
 <strong>version v1.4.0</strong>
 <br />
 <strong>Producer: added message failure:</strong>
-
+#real-cool-heading
 <br />
 
 ```go
@@ -99,6 +99,7 @@ func Consumer() {
 
 <br />
 <strong>Producer: Version v1.3.0</strong>
+[new version](#real-cool-heading)
 <br />
 
 
