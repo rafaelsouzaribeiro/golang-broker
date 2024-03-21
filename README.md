@@ -1,3 +1,66 @@
+<strong>Consumer: Version v1.5.0</strong>
+<br />
+<strong>Added callback topic:</strong>
+<a id="anchor-callback-topic"></a>
+<br />
+
+```go
+
+package main
+
+import (
+	"fmt"
+
+	"github.com/IBM/sarama"
+	"github.com/rafaelsouzaribeiro/apache-kafka/consumer"
+)
+
+func main() {
+	go Consumer()
+
+	select {}
+
+}
+
+func Consumer() {
+	config := sarama.NewConfig()
+	config.Consumer.Return.Errors = true
+	//config.Consumer.Offsets.AutoCommit.Enable = true
+
+	con := consumer.NewConsumer([]string{"springboot:9092"}, "contact-adm",
+		[]string{"contact-adm-insert"}, config, func(messages string, topic string) {
+			// Processe as mensagens recebidas aqui
+			fmt.Println("Message received:", messages,"topic:",topic)
+		})
+
+	client, err := con.GetConsumer()
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer func() {
+		if err := client.Close(); err != nil {
+			panic(err)
+		}
+
+	}()
+
+	cancel, err := con.VerifyConsumer(client)
+	defer cancel()
+
+	if err != nil {
+		panic(err)
+	}
+
+	con.VerifyError(client)
+
+}
+
+```
+
+<br />
+
 <strong>version v1.4.0</strong>
 <br />
 <strong>Producer: added message failure:</strong>
