@@ -61,7 +61,7 @@ func Consumer() {
 
 <br />
 
-<strong>version v1.4.0</strong>
+<strong>version v1.4.0 or lastet</strong>
 <br />
 <strong>Producer: added message failure:</strong>
 <a id="anchor-name"></a>
@@ -102,7 +102,8 @@ func Producer() {
 <br />
 <strong>Run in separate terminal:</strong>
 <br />
-<strong>Consumer: Version v1.3.0 or latest</strong>
+<strong>Consumer: Version v1.3.0</strong>
+<a href="anchor-callback-topic">New Version</a>
 <br />
 
 ```go
