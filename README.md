@@ -4,7 +4,7 @@
 <strong>Consumer: Version v1.5.0</strong>
 <br />
 <strong>Added callback topic:</strong>
-<a id="#anchor-callback-topic"></a>
+<a id="anchor-callback-topic"></a>
 <br />
 
 ```go
@@ -127,7 +127,7 @@ func Producer() {
 <strong>Run in separate terminal:</strong>
 <br />
 <strong>Consumer: Version v1.3.0</strong><br/>
-<a href="anchor-callback-topic">New Version</a>
+<a href="#anchor-callback-topic">New Version</a>
 <br />
 
 ```go
