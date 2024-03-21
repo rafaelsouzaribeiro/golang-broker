@@ -1,4 +1,4 @@
-<strong>Run in separate terminal the consumer and producer</strong><br/>
+<strong>Run the consumer and producer in separate terminals</strong><br/>
 <br/>
 
 <strong>Consumer: Version v1.5.0</strong>
