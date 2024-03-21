@@ -7,7 +7,7 @@ import (
 	"github.com/IBM/sarama"
 )
 
-type MessageCallback func(messages []string)
+type MessageCallback func(messages string, topic string)
 
 type ConsumerGroupHandler struct {
 	brokers  []string
@@ -31,8 +31,7 @@ func (c *ConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession,
 
 	for msg := range claim.Messages() {
 
-		messages := []string{string(msg.Value)}
-		c.callback(messages)
+		c.callback(string(msg.Value), msg.Topic)
 		session.MarkMessage(msg, "") // Marca a mensagem como processada
 
 	}
