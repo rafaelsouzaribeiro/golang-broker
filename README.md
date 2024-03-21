@@ -69,6 +69,27 @@ func Consumer() {
 
 ```go
 
+package main
+
+import (
+	"sync"
+
+	"github.com/IBM/sarama"
+	"github.com/rafaelsouzaribeiro/apache-kafka/producer"
+)
+
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		Producer()
+		wg.Done()
+	}()
+
+	wg.Wait()
+}
+
 func Producer() {
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
