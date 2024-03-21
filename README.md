@@ -102,7 +102,7 @@ func Producer() {
 <br />
 <strong>Run in separate terminal:</strong>
 <br />
-<strong>Consumer: Version v1.3.0</strong>
+<strong>Consumer: Version v1.3.0</strong><br/>
 <a href="anchor-callback-topic">New Version</a>
 <br />
 
