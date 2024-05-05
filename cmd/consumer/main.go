@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/apache-kafka/consumer"
-	"github.com/rafaelsouzaribeiro/apache-kafka/utils"
+	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/consumer"
+	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/utils"
 )
 
 func main() {

@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/apache-kafka/utils"
+	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/utils"
 )
 
 type MessageCallback func(messages string)
