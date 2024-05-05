@@ -41,16 +41,9 @@ func Producer() {
 		},
 	}
 
-	b, err := producer.Encode(message)
-
-	if err != nil {
-		panic(err)
-	}
-
-	produc := producer.NewProducer([]string{"springboot:9092"}, "contact-adm-insert",
-		sarama.ByteEncoder(b), config, func(messages string) {
-			fmt.Println("Message failure:", messages)
-		})
+	produc := producer.NewProducer([]string{"springboot:9092"}, message, config, func(messages string) {
+		fmt.Println("Message failure:", messages)
+	})
 	prod, err := produc.GetProducer()
 
 	if err != nil {

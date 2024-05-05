@@ -1,8 +1,6 @@
 package producer
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 
 	"github.com/IBM/sarama"
@@ -14,44 +12,19 @@ type MessageCallback func(messages string)
 type Producer struct {
 	addrs    []string
 	topic    string
-	message  []byte
+	message  utils.Message
 	config   *sarama.Config
 	callback MessageCallback
 }
 
-func NewProducer(addrs []string, topic string, message []byte, config *sarama.Config, callback MessageCallback) *Producer {
+func NewProducer(addrs []string, message utils.Message, config *sarama.Config, callback MessageCallback) *Producer {
 	return &Producer{
 		addrs:    addrs,
-		topic:    topic,
+		topic:    message.Topic,
 		message:  message,
 		config:   config,
 		callback: callback,
 	}
-}
-
-func Encode(data utils.Message) ([]byte, error) {
-	// Encode the message as JSON
-	buf := bytes.Buffer{}
-	enc := json.NewEncoder(&buf)
-	err := enc.Encode(data)
-	if err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-}
-
-func Decode(data []byte) (*utils.Message, error) {
-	// Create a new message instance
-	message := &utils.Message{}
-
-	// Decode the JSON data
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	err := decoder.Decode(message)
-	if err != nil {
-		return nil, err
-	}
-
-	return message, nil
 }
 
 func (p *Producer) GetProducer() (*sarama.AsyncProducer, error) {
@@ -68,19 +41,13 @@ func (p *Producer) GetProducer() (*sarama.AsyncProducer, error) {
 
 func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 
-	msg, err := Decode(p.message)
-
-	if err != nil {
-		panic(err)
-	}
-
 	saramaMsg := &sarama.ProducerMessage{
-		Topic: msg.Topic,
-		Value: sarama.ByteEncoder(msg.Value),
+		Topic: p.message.Topic,
+		Value: sarama.ByteEncoder(p.message.Value),
 	}
 
 	var heds []sarama.RecordHeader
-	for _, obj := range msg.Headers {
+	for _, obj := range p.message.Headers {
 		heds = append(heds, sarama.RecordHeader{
 			Key:   []byte(obj.Key),
 			Value: []byte(obj.Value),
@@ -103,7 +70,7 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 }
 
 func (p *Producer) GetErrorMessage() string {
-	value := string(p.message)
+	value := string(p.message.Value)
 
-	return string(value)
+	return value
 }
