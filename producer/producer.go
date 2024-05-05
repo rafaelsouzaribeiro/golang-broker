@@ -1,9 +1,12 @@
 package producer
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 
 	"github.com/IBM/sarama"
+	"github.com/rafaelsouzaribeiro/apache-kafka/utils"
 )
 
 type MessageCallback func(messages string)
@@ -11,12 +14,12 @@ type MessageCallback func(messages string)
 type Producer struct {
 	addrs    []string
 	topic    string
-	message  sarama.Encoder
+	message  []byte
 	config   *sarama.Config
 	callback MessageCallback
 }
 
-func NewProducer(addrs []string, topic string, message sarama.Encoder, config *sarama.Config, callback MessageCallback) *Producer {
+func NewProducer(addrs []string, topic string, message []byte, config *sarama.Config, callback MessageCallback) *Producer {
 	return &Producer{
 		addrs:    addrs,
 		topic:    topic,
@@ -24,6 +27,31 @@ func NewProducer(addrs []string, topic string, message sarama.Encoder, config *s
 		config:   config,
 		callback: callback,
 	}
+}
+
+func Encode(data utils.Message) ([]byte, error) {
+	// Encode the message as JSON
+	buf := bytes.Buffer{}
+	enc := json.NewEncoder(&buf)
+	err := enc.Encode(data)
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+func Decode(data []byte) (*utils.Message, error) {
+	// Create a new message instance
+	message := &utils.Message{}
+
+	// Decode the JSON data
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	err := decoder.Decode(message)
+	if err != nil {
+		return nil, err
+	}
+
+	return message, nil
 }
 
 func (p *Producer) GetProducer() (*sarama.AsyncProducer, error) {
@@ -40,39 +68,42 @@ func (p *Producer) GetProducer() (*sarama.AsyncProducer, error) {
 
 func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 
-	message := &sarama.ProducerMessage{Topic: p.topic, Value: p.message}
+	msg, err := Decode(p.message)
 
-	(*producer).Input() <- message
+	if err != nil {
+		panic(err)
+	}
+
+	saramaMsg := &sarama.ProducerMessage{
+		Topic: msg.Topic,
+		Value: sarama.ByteEncoder(msg.Value),
+	}
+
+	var heds []sarama.RecordHeader
+	for _, obj := range msg.Headers {
+		heds = append(heds, sarama.RecordHeader{
+			Key:   []byte(obj.Key),
+			Value: []byte(obj.Value),
+		})
+	}
+
+	saramaMsg.Headers = heds
+	(*producer).Input() <- saramaMsg
 
 	go func() {
 		for err := range (*producer).Errors() {
 			if err != nil {
 				p.callback(p.GetErrorMessage())
-				fmt.Printf("Failed for message produced: %s \n", message.Value)
+				fmt.Printf("Failed for message produced: %s \n", saramaMsg.Value)
 			}
 
 		}
 	}()
 
-	// select {
-	// case success := <-(*producer).Successes():
-	// 	value, err := success.Value.Encode()
-	// 	if err != nil {
-	// 		fmt.Println("Error encoding message:", err)
-	// 		return err
-	// 	}
-
-	// 	fmt.Println("Mensagem produzida:", string(value))
-	// case err := <-(*producer).Errors():
-	// 	fmt.Println("Falho para mensagem produzida:", err)
-	// 	return err
-	// }
-
-	// return nil
 }
 
 func (p *Producer) GetErrorMessage() string {
-	value, _ := p.message.Encode()
+	value := string(p.message)
 
 	return string(value)
 }

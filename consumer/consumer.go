@@ -5,16 +5,16 @@ import (
 	"fmt"
 
 	"github.com/IBM/sarama"
+	"github.com/rafaelsouzaribeiro/apache-kafka/utils"
 )
 
-type MessageCallback func(messages string, topic string)
+type MessageCallback func(messages utils.Message)
 
 type ConsumerGroupHandler struct {
 	brokers  []string
-	groupId  string
-	topics   []string
 	config   *sarama.Config
 	callback MessageCallback
+	message  utils.Message
 }
 
 // Cleanup implements sarama.ConsumerGroupHandler.
@@ -31,7 +31,8 @@ func (c *ConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession,
 
 	for msg := range claim.Messages() {
 
-		c.callback(string(msg.Value), msg.Topic)
+		datas := utils.UpdateKafkaMessage(msg)
+		c.callback(*datas)
 		session.MarkMessage(msg, "") // Marca a mensagem como processada
 
 	}
@@ -39,19 +40,18 @@ func (c *ConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession,
 	return nil
 }
 
-func NewConsumer(brokers []string, groupId string, topics []string, config *sarama.Config, callback MessageCallback) *ConsumerGroupHandler {
+func NewConsumer(brokers []string, config *sarama.Config, data utils.Message, callback MessageCallback) *ConsumerGroupHandler {
 	return &ConsumerGroupHandler{
 		brokers:  brokers,
-		groupId:  groupId,
-		topics:   topics,
 		config:   config,
 		callback: callback,
+		message:  data,
 	}
 }
 
 func (p *ConsumerGroupHandler) GetConsumer() (sarama.ConsumerGroup, error) {
 
-	client, err := sarama.NewConsumerGroup(p.brokers, p.groupId, p.config)
+	client, err := sarama.NewConsumerGroup(p.brokers, p.message.GroupID, p.config)
 
 	if err != nil {
 		return nil, err
@@ -63,9 +63,9 @@ func (p *ConsumerGroupHandler) GetConsumer() (sarama.ConsumerGroup, error) {
 func (p *ConsumerGroupHandler) VerifyConsumer(client sarama.ConsumerGroup) (context.CancelFunc, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	handler := NewConsumer(p.brokers, p.groupId, p.topics, p.config, p.callback) // Atribua o manipulador retornado ao campo handler
+	handler := NewConsumer(p.brokers, p.config, utils.Message{}, p.callback) // Atribua o manipulador retornado ao campo handler
 
-	err := client.Consume(ctx, p.topics, handler)
+	err := client.Consume(ctx, []string{p.message.Topic}, handler)
 	if err != nil {
 		return cancel, err
 	}
@@ -84,25 +84,4 @@ func (p *ConsumerGroupHandler) VerifyError(client sarama.ConsumerGroup) {
 
 		}
 	}()
-
-	// go func() {
-	// 	for {
-	// 		err := <-client.Errors()
-	// 		if err != nil {
-	// 			// Se houver um erro, feche o canal de erros e encerre a goroutine
-	// 			fmt.Println("Ocorreu algum erro")
-
-	// 			p.errors <- err
-	// 			close(p.errors)
-	// 			return
-	// 		}
-	// 	}
-	// }()
-
-	// for err := range p.errors {
-	// 	fmt.Println(err.Error())
-	// 	return err // Assuming you want to stop after receiving the first error
-	// }
-
-	// return nil
 }
