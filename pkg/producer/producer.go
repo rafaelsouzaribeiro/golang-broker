@@ -11,7 +11,6 @@ type MessageCallback func(messages string)
 
 type Producer struct {
 	addrs    []string
-	topic    string
 	message  utils.Message
 	config   *sarama.Config
 	callback MessageCallback
@@ -20,7 +19,6 @@ type Producer struct {
 func NewProducer(addrs []string, message utils.Message, config *sarama.Config, callback MessageCallback) *Producer {
 	return &Producer{
 		addrs:    addrs,
-		topic:    message.Topic,
 		message:  message,
 		config:   config,
 		callback: callback,

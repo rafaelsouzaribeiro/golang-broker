@@ -17,12 +17,10 @@ type ConsumerGroupHandler struct {
 	message  utils.Message
 }
 
-// Cleanup implements sarama.ConsumerGroupHandler.
 func (c *ConsumerGroupHandler) Cleanup(s sarama.ConsumerGroupSession) error {
 	return nil
 }
 
-// Setup implements sarama.ConsumerGroupHandler.
 func (c *ConsumerGroupHandler) Setup(s sarama.ConsumerGroupSession) error {
 	return nil
 }
