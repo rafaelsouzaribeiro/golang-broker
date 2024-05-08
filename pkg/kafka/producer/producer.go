@@ -7,7 +7,7 @@ import (
 	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/utils"
 )
 
-type MessageCallback func(messages string)
+type MessageCallback func(messages utils.Message)
 
 type Producer struct {
 	addrs    []string
@@ -30,7 +30,7 @@ func (p *Producer) GetProducer() (*sarama.AsyncProducer, error) {
 	producer, err := sarama.NewAsyncProducer(p.addrs, p.config)
 
 	if err != nil {
-		p.callback(p.GetErrorMessage())
+		p.callback(*p.GetErrorMessage())
 		return nil, err
 	}
 
@@ -58,7 +58,7 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 	go func() {
 		for err := range (*producer).Errors() {
 			if err != nil {
-				p.callback(p.GetErrorMessage())
+				p.callback(*p.GetErrorMessage())
 				fmt.Printf("Failed for message produced: %s \n", saramaMsg.Value)
 			}
 
@@ -67,8 +67,7 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 
 }
 
-func (p *Producer) GetErrorMessage() string {
-	value := string(p.message.Value)
+func (p *Producer) GetErrorMessage() *utils.Message {
 
-	return value
+	return &p.message
 }

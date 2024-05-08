@@ -41,8 +41,8 @@ func Producer() {
 		},
 	}
 
-	produc := producer.NewProducer([]string{"springboot:9092"}, message, config, func(messages string) {
-		fmt.Println("Message failure:", messages)
+	produc := producer.NewProducer([]string{"springboot:9092"}, message, config, func(messages utils.Message) {
+		fmt.Printf("message failure: %s, topic failure: %s, partition failure: %d \n", messages.Value, messages.Topic, messages.Partition)
 	})
 	prod, err := produc.GetProducer()
 
