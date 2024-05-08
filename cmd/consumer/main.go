@@ -20,12 +20,7 @@ func main() {
 	go consumer.ListenPartition(&[]string{"springboot:9092"}, &data, canal)
 
 	for msgs := range canal {
-		fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %s, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Time.Format("2006-01-02 15:04:05"))
-
-		println("Headers:")
-		for _, header := range msgs.Headers {
-			fmt.Printf("Key: %s, Value: %s\n", header.Key, header.Value)
-		}
+		printMessage(msgs)
 	}
 
 	select {}
@@ -33,6 +28,10 @@ func main() {
 }
 
 func handleMessage(msgs utils.Message) {
+	printMessage(msgs)
+}
+
+func printMessage(msgs utils.Message) {
 	fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %s, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Time.Format("2006-01-02 15:04:05"))
 
 	println("Headers:")
