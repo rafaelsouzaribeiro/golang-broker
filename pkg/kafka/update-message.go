@@ -11,7 +11,7 @@ func UpdateKafkaMessage(msg *sarama.ConsumerMessage) *utils.Message {
 		Value:     string(msg.Value),
 		Topic:     msg.Topic,
 		Partition: msg.Partition,
-		Key:       msg.Key,
+		Key:       string(msg.Key),
 		Time:      msg.Timestamp,
 	}
 

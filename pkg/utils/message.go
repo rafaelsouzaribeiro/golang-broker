@@ -10,7 +10,7 @@ type Message struct {
 	GroupID   string
 	Value     string
 	Partition int32
-	Key       []byte
+	Key       string
 	Headers   []Header
 	Time      time.Time
 	Offset    int64
