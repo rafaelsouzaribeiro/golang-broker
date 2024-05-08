@@ -1,13 +1,11 @@
 package consumer
 
 import (
-	"fmt"
-
 	"github.com/IBM/sarama"
 	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
-func ListenPartition(broker *[]string, data *utils.Message) {
+func ListenPartition(broker *[]string, data *utils.Message, message chan<- utils.Message) {
 
 	consumer, err := sarama.NewConsumer(*broker, GetConfig())
 
@@ -20,12 +18,24 @@ func ListenPartition(broker *[]string, data *utils.Message) {
 	if err != nil {
 		panic(err)
 	}
-	for msgs := range pc.Messages() {
-		fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %s, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Timestamp.Format("2006-01-02 15:04:05"))
 
-		println("Headers:")
-		for _, header := range msgs.Headers {
-			fmt.Printf("Key: %s, Value: %s\n", header.Key, header.Value)
+	for msgs := range pc.Messages() {
+		var listHeaders []utils.Header
+
+		for _, h := range msgs.Headers {
+			header := utils.Header{Key: string(h.Key), Value: string(h.Value)}
+			listHeaders = append(listHeaders, header)
+		}
+
+		message <- utils.Message{
+			Topic:     msgs.Topic,
+			GroupID:   data.GroupID,
+			Value:     string(msgs.Value),
+			Key:       string(msgs.Key),
+			Partition: msgs.Partition,
+			Headers:   listHeaders,
+			Time:      msgs.Timestamp,
+			Offset:    msgs.Offset,
 		}
 
 	}

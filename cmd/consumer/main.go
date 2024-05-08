@@ -1,20 +1,42 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/rafaelsouzaribeiro/broker-golang/pkg/apache-kafka/consumer"
 	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
 func main() {
 	data := utils.Message{
-		Topics:    []string{"contact-adm-insert"},
+		Topics:    []string{"contact-adm-insert", "testar"},
 		Topic:     "contact-adm-insert",
 		GroupID:   "contacts",
 		Partition: 0,
 		Offset:    -1,
 	}
-	go consumer.Consumer(&[]string{"springboot:9092"}, &data)
-	go consumer.ListenPartition(&[]string{"springboot:9092"}, &data)
+	canal := make(chan utils.Message)
+	go consumer.Consumer(&[]string{"springboot:9092"}, &data, handleMessage)
+	go consumer.ListenPartition(&[]string{"springboot:9092"}, &data, canal)
+
+	for msgs := range canal {
+		fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %s, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Time.Format("2006-01-02 15:04:05"))
+
+		println("Headers:")
+		for _, header := range msgs.Headers {
+			fmt.Printf("Key: %s, Value: %s\n", header.Key, header.Value)
+		}
+	}
+
 	select {}
 
+}
+
+func handleMessage(msgs utils.Message) {
+	fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %s, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Time.Format("2006-01-02 15:04:05"))
+
+	println("Headers:")
+	for _, header := range msgs.Headers {
+		fmt.Printf("Key: %s, Value: %s\n", header.Key, header.Value)
+	}
 }

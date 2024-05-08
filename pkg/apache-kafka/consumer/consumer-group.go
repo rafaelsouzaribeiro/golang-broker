@@ -2,13 +2,12 @@ package consumer
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/IBM/sarama"
 	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
-func Consumer(broker *[]string, data *utils.Message) {
+func Consumer(broker *[]string, data *utils.Message, callback MessageCallback) {
 
 	group, err := sarama.NewConsumerGroup(*broker, data.GroupID, GetConfig())
 	if err != nil {
@@ -19,7 +18,7 @@ func Consumer(broker *[]string, data *utils.Message) {
 	ctx := context.Background()
 
 	handler := &ExampleConsumerGroupHandler{
-		Callback: handleMessage,
+		Callback: callback,
 	}
 
 	errs := group.Consume(ctx, data.Topics, handler)
@@ -27,13 +26,4 @@ func Consumer(broker *[]string, data *utils.Message) {
 		panic(errs)
 	}
 
-}
-
-func handleMessage(msgs utils.Message) {
-	fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %s, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Time.Format("2006-01-02 15:04:05"))
-
-	println("Headers:")
-	for _, header := range msgs.Headers {
-		fmt.Printf("Key: %s, Value: %s\n", header.Key, header.Value)
-	}
 }
