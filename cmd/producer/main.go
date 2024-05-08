@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/IBM/sarama"
 	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/kafka/producer"
 	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/utils"
 )
@@ -22,10 +21,7 @@ func main() {
 }
 
 func Producer() {
-	config := sarama.NewConfig()
-	config.Producer.RequiredAcks = sarama.WaitForAll
-	config.Producer.Retry.Max = 5
-	config.Producer.Return.Successes = true
+
 	message := utils.Message{
 		Value: "Testar",
 		Topic: "contact-adm-insert",
@@ -41,7 +37,7 @@ func Producer() {
 		},
 	}
 
-	produc := producer.NewProducer([]string{"springboot:9092"}, message, config, func(messages utils.Message) {
+	produc := producer.NewProducer([]string{"springboot:9092"}, message, producer.GetConfig(), func(messages utils.Message) {
 		fmt.Printf("message failure: %s, topic failure: %s, partition failure: %d \n", messages.Value, messages.Topic, messages.Partition)
 	})
 	prod, err := produc.GetProducer()
