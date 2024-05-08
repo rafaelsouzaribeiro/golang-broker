@@ -4,9 +4,10 @@ import (
 	"fmt"
 
 	"github.com/IBM/sarama"
+	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/utils"
 )
 
-func ListenPartition(broker *[]string, topic string, partition int32, offset int64) {
+func ListenPartition(broker *[]string, data *utils.Message) {
 
 	consumer, err := sarama.NewConsumer(*broker, GetConfig())
 
@@ -14,7 +15,7 @@ func ListenPartition(broker *[]string, topic string, partition int32, offset int
 		panic(err)
 	}
 
-	pc, err := consumer.ConsumePartition(topic, partition, offset)
+	pc, err := consumer.ConsumePartition(data.Topic, data.Partition, data.Offset)
 
 	if err != nil {
 		panic(err)

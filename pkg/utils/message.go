@@ -1,8 +1,11 @@
 package utils
 
-import "time"
+import (
+	"time"
+)
 
 type Message struct {
+	Topics    []string
 	Topic     string
 	GroupID   string
 	Value     string
@@ -10,6 +13,7 @@ type Message struct {
 	Key       []byte
 	Headers   []Header
 	Time      time.Time
+	Offset    int64
 }
 
 type Header struct {

@@ -1,12 +1,13 @@
-package utils
+package kafka
 
 import (
 	"github.com/IBM/sarama"
+	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/utils"
 )
 
-func UpdateKafkaMessage(msg *sarama.ConsumerMessage) *Message {
+func UpdateKafkaMessage(msg *sarama.ConsumerMessage) *utils.Message {
 
-	message := Message{
+	message := utils.Message{
 		Value:     string(msg.Value),
 		Topic:     msg.Topic,
 		Partition: msg.Partition,
@@ -14,9 +15,9 @@ func UpdateKafkaMessage(msg *sarama.ConsumerMessage) *Message {
 		Time:      msg.Timestamp,
 	}
 
-	var headers []Header
+	var headers []utils.Header
 	for _, header := range msg.Headers {
-		headers = append(headers, Header{
+		headers = append(headers, utils.Header{
 			Key:   string(header.Key),
 			Value: string(header.Value),
 		})

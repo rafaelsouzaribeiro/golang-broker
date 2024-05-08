@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/producer"
+	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/kafka/producer"
 	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/utils"
 )
 

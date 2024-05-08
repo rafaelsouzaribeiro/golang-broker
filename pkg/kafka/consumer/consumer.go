@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/IBM/sarama"
+	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/kafka"
 	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/utils"
 )
 
@@ -26,7 +27,7 @@ func (*ExampleConsumerGroupHandler) Cleanup(sarama.ConsumerGroupSession) error {
 func (h *ExampleConsumerGroupHandler) ConsumeClaim(sess sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
 
-		data := utils.UpdateKafkaMessage(msg)
+		data := kafka.UpdateKafkaMessage(msg)
 		h.Callback(*data)
 
 		sess.MarkMessage(msg, "")
