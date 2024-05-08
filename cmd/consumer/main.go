@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/IBM/sarama"
@@ -9,43 +10,57 @@ import (
 )
 
 func main() {
-	go Consumer(handleMessage)
+	//go Consumer(&[]string{"springboot:9092"}, &[]string{"testar"}, "contacts")
+	go ListenPartition(&[]string{"springboot:9092"}, "testar", 1, -1)
 	select {}
 
 }
 
-func Consumer(handleMessageFunc consumer.MessageCallback) {
-	config := sarama.NewConfig()
-	config.Consumer.Return.Errors = true
+func ListenPartition(broker *[]string, topic string, partition int32, offset int64) {
 
-	msg := utils.Message{
-		Topic:   "contact-adm-insert",
-		GroupID: "contacts",
-	}
-
-	con := consumer.NewConsumer([]string{"springboot:9092"}, config, msg, handleMessageFunc)
-
-	client, err := con.GetConsumer()
+	consumer, err := sarama.NewConsumer(*broker, consumer.GetConfig())
 
 	if err != nil {
 		panic(err)
 	}
 
-	defer func() {
-		if err := client.Close(); err != nil {
-			panic(err)
+	pc, err := consumer.ConsumePartition(topic, partition, offset)
+
+	if err != nil {
+		panic(err)
+	}
+	for msgs := range pc.Messages() {
+		fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %s, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Timestamp.Format("2006-01-02 15:04:05"))
+
+		println("Headers:")
+		for _, header := range msgs.Headers {
+			fmt.Printf("Key: %s, Value: %s\n", header.Key, header.Value)
 		}
 
-	}()
+	}
 
-	cancel, err := con.VerifyConsumer(client)
-	defer cancel()
+	pc.Close()
 
+}
+
+func Consumer(broker, topics *[]string, groupId string) {
+
+	group, err := sarama.NewConsumerGroup(*broker, groupId, consumer.GetConfig())
 	if err != nil {
 		panic(err)
 	}
 
-	con.VerifyError(client)
+	// Consume messages
+	ctx := context.Background()
+
+	handler := &consumer.ExampleConsumerGroupHandler{
+		Callback: handleMessage,
+	}
+
+	errs := group.Consume(ctx, *topics, handler)
+	if errs != nil {
+		panic(errs)
+	}
 
 }
 
