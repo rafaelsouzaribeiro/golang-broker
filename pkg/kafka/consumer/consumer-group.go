@@ -30,7 +30,7 @@ func Consumer(broker *[]string, data *utils.Message) {
 }
 
 func handleMessage(msgs utils.Message) {
-	fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %d, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Time.Format("2006-01-02 15:04:05"))
+	fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %s, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Time.Format("2006-01-02 15:04:05"))
 
 	println("Headers:")
 	for _, header := range msgs.Headers {
