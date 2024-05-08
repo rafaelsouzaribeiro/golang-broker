@@ -1,4 +1,4 @@
-module github.com/rafaelsouzaribeiro/apache-kafka
+module github.com/rafaelsouzaribeiro/broker-golang
 
 go 1.21.4
 

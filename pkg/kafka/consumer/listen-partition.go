@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/utils"
+	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
 func ListenPartition(broker *[]string, data *utils.Message) {

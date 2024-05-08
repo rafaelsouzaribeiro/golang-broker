@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/kafka/consumer"
-	"github.com/rafaelsouzaribeiro/apache-kafka/pkg/utils"
+	"github.com/rafaelsouzaribeiro/broker-golang/pkg/kafka/consumer"
+	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
 func main() {
