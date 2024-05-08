@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/kafka"
+	apachekafka "github.com/rafaelsouzaribeiro/broker-golang/pkg/apache-kafka"
 	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
@@ -27,7 +27,7 @@ func (*ExampleConsumerGroupHandler) Cleanup(sarama.ConsumerGroupSession) error {
 func (h *ExampleConsumerGroupHandler) ConsumeClaim(sess sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
 
-		data := kafka.UpdateKafkaMessage(msg)
+		data := apachekafka.UpdateKafkaMessage(msg)
 		h.Callback(*data)
 
 		sess.MarkMessage(msg, "")

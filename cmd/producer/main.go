@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/kafka/producer"
+	"github.com/rafaelsouzaribeiro/broker-golang/pkg/apache-kafka/producer"
 	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 

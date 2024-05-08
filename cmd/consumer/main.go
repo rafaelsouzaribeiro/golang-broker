@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/kafka/consumer"
+	"github.com/rafaelsouzaribeiro/broker-golang/pkg/apache-kafka/consumer"
 	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
