@@ -16,10 +16,10 @@ type Producer struct {
 	callback MessageCallback
 }
 
-func NewProducer(addrs []string, message utils.Message, config *sarama.Config, callback MessageCallback) *Producer {
+func NewProducer(addrs *[]string, message *utils.Message, config *sarama.Config, callback MessageCallback) *Producer {
 	return &Producer{
-		addrs:    addrs,
-		message:  message,
+		addrs:    *addrs,
+		message:  *message,
 		config:   config,
 		callback: callback,
 	}
@@ -45,7 +45,7 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 	}
 
 	var heds []sarama.RecordHeader
-	for _, obj := range p.message.Headers {
+	for _, obj := range *p.message.Headers {
 		heds = append(heds, sarama.RecordHeader{
 			Key:   []byte(obj.Key),
 			Value: []byte(obj.Value),

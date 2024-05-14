@@ -22,7 +22,7 @@ func UpdateKafkaMessage(msg *sarama.ConsumerMessage) *utils.Message {
 			Value: string(header.Value),
 		})
 	}
-	message.Headers = headers
+	message.Headers = &headers
 
 	return &message
 }

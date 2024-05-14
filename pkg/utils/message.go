@@ -5,13 +5,13 @@ import (
 )
 
 type Message struct {
-	Topics    []string
+	Topics    *[]string
 	Topic     string
 	GroupID   string
 	Value     string
 	Partition int32
 	Key       string
-	Headers   []Header
+	Headers   *[]Header
 	Time      time.Time
 	Offset    int64
 }

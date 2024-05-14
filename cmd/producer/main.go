@@ -25,7 +25,7 @@ func Producer() {
 	message := utils.Message{
 		Value: "Testar",
 		Topic: "contact-adm-insert",
-		Headers: []utils.Header{
+		Headers: &[]utils.Header{
 			{
 				Key:   "your-header-key1",
 				Value: "your-header-value1",
@@ -37,7 +37,7 @@ func Producer() {
 		},
 	}
 
-	produc := producer.NewProducer([]string{"springboot:9092"}, message, producer.GetConfig(), func(messages utils.Message) {
+	produc := producer.NewProducer(&[]string{"springboot:9092"}, &message, producer.GetConfig(), func(messages utils.Message) {
 		fmt.Printf("message failure: %s, topic failure: %s, partition failure: %d \n", messages.Value, messages.Topic, messages.Partition)
 	})
 	prod, err := produc.GetProducer()

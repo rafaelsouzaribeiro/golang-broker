@@ -21,7 +21,7 @@ func Consumer(broker *[]string, data *utils.Message, callback MessageCallback) {
 		Callback: callback,
 	}
 
-	errs := group.Consume(ctx, data.Topics, handler)
+	errs := group.Consume(ctx, *data.Topics, handler)
 	if errs != nil {
 		panic(errs)
 	}

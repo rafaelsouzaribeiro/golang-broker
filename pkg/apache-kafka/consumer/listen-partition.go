@@ -33,7 +33,7 @@ func ListenPartition(broker *[]string, data *utils.Message, message chan<- utils
 			Value:     string(msgs.Value),
 			Key:       string(msgs.Key),
 			Partition: msgs.Partition,
-			Headers:   listHeaders,
+			Headers:   &listHeaders,
 			Time:      msgs.Timestamp,
 			Offset:    msgs.Offset,
 		}
