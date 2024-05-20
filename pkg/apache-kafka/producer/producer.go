@@ -44,15 +44,18 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 		Value: sarama.ByteEncoder(p.message.Value),
 	}
 
-	var heds []sarama.RecordHeader
-	for _, obj := range *p.message.Headers {
-		heds = append(heds, sarama.RecordHeader{
-			Key:   []byte(obj.Key),
-			Value: []byte(obj.Value),
-		})
+	if p.message.Headers != nil && len(*p.message.Headers) > 0 {
+		var heds []sarama.RecordHeader
+		for _, obj := range *p.message.Headers {
+			heds = append(heds, sarama.RecordHeader{
+				Key:   []byte(obj.Key),
+				Value: []byte(obj.Value),
+			})
+		}
+
+		saramaMsg.Headers = heds
 	}
 
-	saramaMsg.Headers = heds
 	(*producer).Input() <- saramaMsg
 
 	go func() {
