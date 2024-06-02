@@ -36,13 +36,13 @@ func Sqs() {
 
 		result, err := svc.ReceiveMessage(receiveMessageInput)
 		if err != nil {
-			log.Fatalf("Erro ao receber mensagens: %v", err)
+			log.Fatalf("Error receiving messages: %v", err)
 			continue
 		}
 
 		if len(result.Messages) > 0 {
 			for _, message := range result.Messages {
-				fmt.Printf("Mensagem recebida: %s\n", *message.Body)
+				fmt.Printf("Message received: %s\n", *message.Body)
 
 				deleteMessageInput := &sqs.DeleteMessageInput{
 					QueueUrl:      aws.String(queueURL),
@@ -50,7 +50,7 @@ func Sqs() {
 				}
 				_, err := svc.DeleteMessage(deleteMessageInput)
 				if err != nil {
-					log.Fatalf("Erro ao apagar a mensagem: %v", err)
+					log.Fatalf("Error deleting message: %v", err)
 					continue
 				}
 			}
