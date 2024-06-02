@@ -28,8 +28,9 @@ func Sqs() {
 
 	for {
 		receiveMessageInput := &sqs.ReceiveMessageInput{
-			QueueUrl:        aws.String(queueURL),
-			WaitTimeSeconds: aws.Int64(20),
+			MaxNumberOfMessages: aws.Int64(1),
+			QueueUrl:            aws.String(queueURL),
+			WaitTimeSeconds:     aws.Int64(20),
 		}
 
 		result, err := svc.ReceiveMessage(receiveMessageInput)
