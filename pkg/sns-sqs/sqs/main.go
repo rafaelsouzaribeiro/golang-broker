@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -26,32 +29,45 @@ func Sqs() {
 
 	svc := sqs.New(sess)
 
+	signalCh := make(chan os.Signal, 1)
+	signal.Notify(signalCh, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+
 	for {
-		receiveMessageInput := &sqs.ReceiveMessageInput{
-			MaxNumberOfMessages: aws.Int64(1),
-			QueueUrl:            aws.String(queueURL),
-			WaitTimeSeconds:     aws.Int64(20),
-		}
+		select {
+		case <-signalCh:
+			fmt.Println("saindo..")
+			return
+		default:
 
-		result, err := svc.ReceiveMessage(receiveMessageInput)
-		if err != nil {
-			log.Fatalf("Erro ao receber mensagens: %v", err)
-		}
+			receiveMessageInput := &sqs.ReceiveMessageInput{
+				MaxNumberOfMessages: aws.Int64(1),
+				QueueUrl:            aws.String(queueURL),
+				WaitTimeSeconds:     aws.Int64(20),
+			}
 
-		if len(result.Messages) > 0 {
-			for _, message := range result.Messages {
-				fmt.Printf("Mensagem recebida: %s\n", *message.Body)
+			result, err := svc.ReceiveMessage(receiveMessageInput)
+			if err != nil {
+				log.Fatalf("Erro ao receber mensagens: %v", err)
+				continue
+			}
 
-				deleteMessageInput := &sqs.DeleteMessageInput{
-					QueueUrl:      aws.String(queueURL),
-					ReceiptHandle: message.ReceiptHandle,
-				}
-				_, err := svc.DeleteMessage(deleteMessageInput)
-				if err != nil {
-					log.Fatalf("Erro ao apagar a mensagem: %v", err)
+			if len(result.Messages) > 0 {
+				for _, message := range result.Messages {
+					fmt.Printf("Mensagem recebida: %s\n", *message.Body)
+
+					deleteMessageInput := &sqs.DeleteMessageInput{
+						QueueUrl:      aws.String(queueURL),
+						ReceiptHandle: message.ReceiptHandle,
+					}
+					_, err := svc.DeleteMessage(deleteMessageInput)
+					if err != nil {
+						log.Fatalf("Erro ao apagar a mensagem: %v", err)
+						continue
+					}
 				}
 			}
 		}
+
 	}
 
 }
