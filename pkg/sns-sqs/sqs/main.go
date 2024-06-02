@@ -1,12 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
+	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
 const (
@@ -42,15 +44,23 @@ func Sqs() {
 
 		if len(result.Messages) > 0 {
 			for _, message := range result.Messages {
-				fmt.Printf("Message received: %s\n", *message.Body)
+				var snsMessage utils.SNSMessage
+
+				err := json.Unmarshal([]byte(*message.Body), &snsMessage)
+				if err != nil {
+					log.Printf("Erro ao decodificar a mensagem: %v", err)
+				}
+
+				fmt.Printf("Message received: Value:%s MessageId:%s Topic:%s Timestamp: %s\n",
+					snsMessage.Message, snsMessage.MessageId, snsMessage.TopicArn, snsMessage.Timestamp)
 
 				deleteMessageInput := &sqs.DeleteMessageInput{
 					QueueUrl:      aws.String(queueURL),
 					ReceiptHandle: message.ReceiptHandle,
 				}
-				_, err := svc.DeleteMessage(deleteMessageInput)
-				if err != nil {
-					log.Fatalf("Error deleting message: %v", err)
+				_, errs := svc.DeleteMessage(deleteMessageInput)
+				if errs != nil {
+					log.Fatalf("Error deleting message: %v", errs)
 					continue
 				}
 			}

@@ -20,3 +20,13 @@ type Header struct {
 	Key   string
 	Value string
 }
+
+type SNSMessage struct {
+	Type             string `json:"Type"`
+	MessageId        string `json:"MessageId"`
+	TopicArn         string `json:"TopicArn"`
+	Subject          string `json:"Subject"`
+	Message          string `json:"Message"`
+	Timestamp        string `json:"Timestamp"`
+	SignatureVersion string `json:"SignatureVersion"`
+}
