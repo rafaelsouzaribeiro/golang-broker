@@ -12,9 +12,7 @@ func main() {
 	configs := utils.SNSSQSMessage{
 		Endpoint: aws.String("http://localhost:4566"),
 		Region:   aws.String("us-east-1"),
-		Message:  "Message Test",
 		QueueURL: "http://localhost:4566/000000000000/my-queue",
-		TopicArn: "arn:aws:sns:us-east-1:000000000000:my-topic",
 	}
 
 	messageChan := make(chan utils.SNSSQSMessage)
