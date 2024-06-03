@@ -10,7 +10,7 @@ import (
 	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
-func Sqs(configs utils.SNSMessage, messageChan chan<- utils.SNSMessage) {
+func Sqs(configs utils.SNSSQSMessage, messageChan chan<- utils.SNSSQSMessage) {
 	sess := session.Must(session.NewSession(&aws.Config{
 		Endpoint: configs.Endpoint,
 		Region:   configs.Region,
@@ -23,7 +23,7 @@ func Sqs(configs utils.SNSMessage, messageChan chan<- utils.SNSMessage) {
 		receiveMessageInput := &sqs.ReceiveMessageInput{
 			MaxNumberOfMessages: aws.Int64(1),
 			QueueUrl:            aws.String(configs.QueueURL),
-			WaitTimeSeconds:     aws.Int64(20),
+			WaitTimeSeconds:     aws.Int64(10),
 		}
 
 		result, err := svc.ReceiveMessage(receiveMessageInput)
@@ -34,7 +34,7 @@ func Sqs(configs utils.SNSMessage, messageChan chan<- utils.SNSMessage) {
 
 		if len(result.Messages) > 0 {
 			for _, message := range result.Messages {
-				var snsMessage utils.SNSMessage
+				var snsMessage utils.SNSSQSMessage
 
 				err := json.Unmarshal([]byte(*message.Body), &snsMessage)
 				if err != nil {

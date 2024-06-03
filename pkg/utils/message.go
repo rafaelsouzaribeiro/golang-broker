@@ -21,7 +21,7 @@ type Header struct {
 	Value string
 }
 
-type SNSMessage struct {
+type SNSSQSMessage struct {
 	Type             string `json:"Type"`
 	MessageId        string `json:"MessageId"`
 	TopicArn         string `json:"TopicArn"`

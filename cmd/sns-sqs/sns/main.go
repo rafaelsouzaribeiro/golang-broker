@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	configs := utils.SNSMessage{
+	configs := utils.SNSSQSMessage{
 		Endpoint: aws.String("http://localhost:4566"),
 		Region:   aws.String("us-east-1"),
 		Message:  "Message Test",

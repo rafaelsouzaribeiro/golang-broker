@@ -9,7 +9,7 @@ import (
 	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
-func Sns(config utils.SNSMessage) {
+func Sns(config utils.SNSSQSMessage) {
 	sess := session.Must(session.NewSession(&aws.Config{
 		Endpoint: config.Endpoint,
 		Region:   config.Region,
