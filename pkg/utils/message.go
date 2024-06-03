@@ -29,4 +29,7 @@ type SNSMessage struct {
 	Message          string `json:"Message"`
 	Timestamp        string `json:"Timestamp"`
 	SignatureVersion string `json:"SignatureVersion"`
+	Endpoint         *string
+	Region           *string
+	QueueURL         string
 }

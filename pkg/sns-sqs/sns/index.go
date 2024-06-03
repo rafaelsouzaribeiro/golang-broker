@@ -1,4 +1,4 @@
-package main
+package sns
 
 import (
 	"fmt"
@@ -6,24 +6,21 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
+	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
-const (
-	topicArn = "arn:aws:sns:us-east-1:000000000000:my-topic"
-)
-
-func main() {
+func Sns(config utils.SNSMessage) {
 	sess := session.Must(session.NewSession(&aws.Config{
-		Endpoint: aws.String("http://localhost:4566"),
-		Region:   aws.String("us-east-1"),
+		Endpoint: config.Endpoint,
+		Region:   config.Region,
 	}))
 
 	svc := sns.New(sess)
-	message := "Message Test"
+	message := config.Message
 
 	publishParams := &sns.PublishInput{
-		Message:  aws.String("Message Test"),
-		TopicArn: aws.String(topicArn),
+		Message:  aws.String(message),
+		TopicArn: aws.String(config.TopicArn),
 	}
 
 	result, err := svc.Publish(publishParams)

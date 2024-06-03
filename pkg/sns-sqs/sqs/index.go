@@ -1,8 +1,7 @@
-package main
+package sqs
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -11,19 +10,10 @@ import (
 	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
 )
 
-const (
-	queueURL = "http://localhost:4566/000000000000/my-queue"
-)
-
-func main() {
-	go Sqs()
-	select {}
-}
-
-func Sqs() {
+func Sqs(configs utils.SNSMessage, messageChan chan<- utils.SNSMessage) {
 	sess := session.Must(session.NewSession(&aws.Config{
-		Endpoint: aws.String("http://localhost:4566"),
-		Region:   aws.String("us-east-1"),
+		Endpoint: configs.Endpoint,
+		Region:   configs.Region,
 	}))
 
 	svc := sqs.New(sess)
@@ -32,7 +22,7 @@ func Sqs() {
 
 		receiveMessageInput := &sqs.ReceiveMessageInput{
 			MaxNumberOfMessages: aws.Int64(1),
-			QueueUrl:            aws.String(queueURL),
+			QueueUrl:            aws.String(configs.QueueURL),
 			WaitTimeSeconds:     aws.Int64(20),
 		}
 
@@ -48,14 +38,13 @@ func Sqs() {
 
 				err := json.Unmarshal([]byte(*message.Body), &snsMessage)
 				if err != nil {
-					log.Printf("Erro ao decodificar a mensagem: %v", err)
+					log.Printf("Error decoding message: %v", err)
 				}
 
-				fmt.Printf("Message received: Value:%s MessageId:%s Topic:%s Timestamp: %s\n",
-					snsMessage.Message, snsMessage.MessageId, snsMessage.TopicArn, snsMessage.Timestamp)
+				messageChan <- snsMessage
 
 				deleteMessageInput := &sqs.DeleteMessageInput{
-					QueueUrl:      aws.String(queueURL),
+					QueueUrl:      aws.String(configs.QueueURL),
 					ReceiptHandle: message.ReceiptHandle,
 				}
 				_, errs := svc.DeleteMessage(deleteMessageInput)
