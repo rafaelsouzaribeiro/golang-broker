@@ -1,4 +1,4 @@
-module github.com/rafaelsouzaribeiro/broker-golang
+module github.com/rafaelsouzaribeiro/golang-broker
 
 go 1.21.4
 

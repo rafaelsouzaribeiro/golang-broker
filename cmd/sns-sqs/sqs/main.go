@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/sns-sqs/sqs"
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/sns-sqs/sqs"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
 func main() {

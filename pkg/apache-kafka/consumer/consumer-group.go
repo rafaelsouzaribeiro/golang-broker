@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
 func Consumer(broker *[]string, data *utils.Message, callback MessageCallback) {

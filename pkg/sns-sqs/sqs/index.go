@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
 func Sqs(configs utils.SNSSQSMessage, messageChan chan<- utils.SNSSQSMessage) {

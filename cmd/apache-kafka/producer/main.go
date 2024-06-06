@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/apache-kafka/producer"
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/apache-kafka/producer"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
 func main() {

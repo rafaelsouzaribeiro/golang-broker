@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/IBM/sarama"
-	apachekafka "github.com/rafaelsouzaribeiro/broker-golang/pkg/apache-kafka"
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
+	apachekafka "github.com/rafaelsouzaribeiro/golang-broker/pkg/apache-kafka"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
 type MessageCallback func(messages utils.Message)

@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/apache-kafka/consumer"
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/apache-kafka/consumer"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
 func main() {

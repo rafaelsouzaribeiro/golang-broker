@@ -2,7 +2,7 @@ package apachekafka
 
 import (
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/broker-golang/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
 func UpdateKafkaMessage(msg *sarama.ConsumerMessage) *utils.Message {
