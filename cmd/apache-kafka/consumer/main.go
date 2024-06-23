@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+
 	data := utils.Message{
 		Topics:    &[]string{"contact-adm-insert", "testar"},
 		Topic:     "contact-adm-insert",
@@ -16,7 +17,7 @@ func main() {
 		Offset:    -1,
 	}
 	canal := make(chan utils.Message)
-	go consumer.Consumer(&[]string{"springboot:9092"}, &data, handleMessage)
+	go consumer.Consumer(&[]string{"springboot:9092"}, &data, canal)
 	go consumer.ListenPartition(&[]string{"springboot:9092"}, &data, canal)
 
 	for msgs := range canal {
@@ -25,10 +26,6 @@ func main() {
 
 	select {}
 
-}
-
-func handleMessage(msgs utils.Message) {
-	printMessage(msgs)
 }
 
 func printMessage(msgs utils.Message) {

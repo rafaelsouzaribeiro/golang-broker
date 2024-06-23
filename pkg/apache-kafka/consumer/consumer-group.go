@@ -7,18 +7,17 @@ import (
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
-func Consumer(broker *[]string, data *utils.Message, callback MessageCallback) {
+func Consumer(broker *[]string, data *utils.Message, channel chan utils.Message) {
 
 	group, err := sarama.NewConsumerGroup(*broker, data.GroupID, GetConfig())
 	if err != nil {
 		panic(err)
 	}
 
-	// Consume messages
 	ctx := context.Background()
 
 	handler := &ExampleConsumerGroupHandler{
-		Callback: callback,
+		Channel: channel,
 	}
 
 	errs := group.Consume(ctx, *data.Topics, handler)

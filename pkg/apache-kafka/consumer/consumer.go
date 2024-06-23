@@ -11,7 +11,7 @@ import (
 type MessageCallback func(messages utils.Message)
 
 type ExampleConsumerGroupHandler struct {
-	Callback MessageCallback
+	Channel chan utils.Message
 }
 
 func (*ExampleConsumerGroupHandler) Setup(sarama.ConsumerGroupSession) error {
@@ -28,8 +28,7 @@ func (h *ExampleConsumerGroupHandler) ConsumeClaim(sess sarama.ConsumerGroupSess
 	for msg := range claim.Messages() {
 
 		data := apachekafka.UpdateKafkaMessage(msg)
-		h.Callback(*data)
-
+		h.Channel <- *data
 		sess.MarkMessage(msg, "")
 	}
 
