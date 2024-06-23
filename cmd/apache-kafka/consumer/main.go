@@ -24,6 +24,8 @@ func main() {
 		printMessage(msgs)
 	}
 
+	close(canal)
+
 	select {}
 
 }
