@@ -8,8 +8,6 @@ import (
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
-type MessageCallback func(messages utils.Message)
-
 type ExampleConsumerGroupHandler struct {
 	Channel chan utils.Message
 }
