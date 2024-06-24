@@ -10,7 +10,7 @@ import (
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
-func Sqs(configs utils.SNSSQSMessage, messageChan chan<- utils.SNSSQSMessage) {
+func Receive(configs utils.SNSSQSMessage, messageChan chan<- utils.SNSSQSMessage) {
 	sess := session.Must(session.NewSession(&aws.Config{
 		Endpoint: configs.Endpoint,
 		Region:   configs.Region,
