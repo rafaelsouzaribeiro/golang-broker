@@ -5,11 +5,11 @@ import (
 
 	"github.com/IBM/sarama"
 	apachekafka "github.com/rafaelsouzaribeiro/golang-broker/pkg/apache-kafka"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
 type ExampleConsumerGroupHandler struct {
-	Channel chan utils.Message
+	Channel chan payload.Message
 }
 
 func (*ExampleConsumerGroupHandler) Setup(sarama.ConsumerGroupSession) error {

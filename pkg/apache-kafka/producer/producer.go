@@ -4,19 +4,19 @@ import (
 	"fmt"
 
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-type MessageCallback func(messages utils.Message)
+type MessageCallback func(messages payload.Message)
 
 type Producer struct {
 	addrs    []string
-	message  utils.Message
+	message  payload.Message
 	config   *sarama.Config
 	callback MessageCallback
 }
 
-func NewProducer(addrs *[]string, message *utils.Message, config *sarama.Config, callback MessageCallback) *Producer {
+func NewProducer(addrs *[]string, message *payload.Message, config *sarama.Config, callback MessageCallback) *Producer {
 	return &Producer{
 		addrs:    *addrs,
 		message:  *message,
@@ -70,7 +70,7 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 
 }
 
-func (p *Producer) GetErrorMessage() *utils.Message {
+func (p *Producer) GetErrorMessage() *payload.Message {
 
 	return &p.message
 }

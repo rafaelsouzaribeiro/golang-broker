@@ -4,24 +4,24 @@ import (
 	"fmt"
 
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/apache-kafka/consumer"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
 func main() {
 
-	data := utils.Message{
+	data := payload.Message{
 		Topics:    &[]string{"contact-adm-insert", "testar"},
 		Topic:     "contact-adm-insert",
 		GroupID:   "contacts",
 		Partition: 0,
 		Offset:    -1,
 	}
-	canal := make(chan utils.Message)
+	canal := make(chan payload.Message)
 	go consumer.Consumer(&[]string{"springboot:9092"}, &data, canal)
 	go consumer.ListenPartition(&[]string{"springboot:9092"}, &data, canal)
 
 	for msgs := range canal {
-		printMessage(msgs)
+		printMessage(&msgs)
 	}
 
 	close(canal)
@@ -30,7 +30,7 @@ func main() {
 
 }
 
-func printMessage(msgs utils.Message) {
+func printMessage(msgs *payload.Message) {
 	fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %s, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Time.Format("2006-01-02 15:04:05"))
 
 	println("Headers:")

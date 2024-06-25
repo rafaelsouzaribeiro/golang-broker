@@ -4,12 +4,12 @@ import (
 	"sync"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/sns-sqs/sns"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
 )
 
 func main() {
-	configs := utils.SNSSQSMessage{
+	configs := payload.SNSSQSMessage{
 		Endpoint: aws.String("http://localhost:4566"),
 		Region:   aws.String("us-east-1"),
 		Message:  "Message Test",

@@ -2,12 +2,12 @@ package apachekafka
 
 import (
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func UpdateKafkaMessage(msg *sarama.ConsumerMessage) *utils.Message {
+func UpdateKafkaMessage(msg *sarama.ConsumerMessage) *payload.Message {
 
-	message := utils.Message{
+	message := payload.Message{
 		Value:     string(msg.Value),
 		Topic:     msg.Topic,
 		Partition: msg.Partition,
@@ -15,9 +15,9 @@ func UpdateKafkaMessage(msg *sarama.ConsumerMessage) *utils.Message {
 		Time:      msg.Timestamp,
 	}
 
-	var headers []utils.Header
+	var headers []payload.Header
 	for _, header := range msg.Headers {
-		headers = append(headers, utils.Header{
+		headers = append(headers, payload.Header{
 			Key:   string(header.Key),
 			Value: string(header.Value),
 		})

@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func Consumer(broker *[]string, data *utils.Message, channel chan utils.Message) {
+func Consumer(broker *[]string, data *payload.Message, channel chan payload.Message) {
 
 	group, err := sarama.NewConsumerGroup(*broker, data.GroupID, GetConfig())
 	if err != nil {

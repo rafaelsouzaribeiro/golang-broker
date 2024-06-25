@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/apache-kafka/producer"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
 func main() {
@@ -22,10 +22,10 @@ func main() {
 
 func Producer() {
 
-	message := utils.Message{
+	message := payload.Message{
 		Value: "Testar",
 		Topic: "contact-adm-insert",
-		Headers: &[]utils.Header{
+		Headers: &[]payload.Header{
 			{
 				Key:   "your-header-key1",
 				Value: "your-header-value1",
@@ -37,7 +37,7 @@ func Producer() {
 		},
 	}
 
-	produc := producer.NewProducer(&[]string{"springboot:9092"}, &message, producer.GetConfig(), func(messages utils.Message) {
+	produc := producer.NewProducer(&[]string{"springboot:9092"}, &message, producer.GetConfig(), func(messages payload.Message) {
 		fmt.Printf("message failure: %s, topic failure: %s, partition failure: %d \n", messages.Value, messages.Topic, messages.Partition)
 	})
 	prod, err := produc.GetProducer()

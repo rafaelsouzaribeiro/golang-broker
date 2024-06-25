@@ -2,10 +2,10 @@ package consumer
 
 import (
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func ListenPartition(broker *[]string, data *utils.Message, message chan<- utils.Message) {
+func ListenPartition(broker *[]string, data *payload.Message, message chan<- payload.Message) {
 
 	consumer, err := sarama.NewConsumer(*broker, GetConfig())
 
@@ -20,14 +20,14 @@ func ListenPartition(broker *[]string, data *utils.Message, message chan<- utils
 	}
 
 	for msgs := range pc.Messages() {
-		var listHeaders []utils.Header
+		var listHeaders []payload.Header
 
 		for _, h := range msgs.Headers {
-			header := utils.Header{Key: string(h.Key), Value: string(h.Value)}
+			header := payload.Header{Key: string(h.Key), Value: string(h.Value)}
 			listHeaders = append(listHeaders, header)
 		}
 
-		message <- utils.Message{
+		message <- payload.Message{
 			Topic:     msgs.Topic,
 			GroupID:   data.GroupID,
 			Value:     string(msgs.Value),

@@ -7,10 +7,10 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func Receive(configs *utils.SNSSQSMessage, messageChan chan<- utils.SNSSQSMessage) {
+func Receive(configs *payload.SNSSQSMessage, messageChan chan<- payload.SNSSQSMessage) {
 	sess := session.Must(session.NewSession(&aws.Config{
 		Endpoint: configs.Endpoint,
 		Region:   configs.Region,
@@ -34,7 +34,7 @@ func Receive(configs *utils.SNSSQSMessage, messageChan chan<- utils.SNSSQSMessag
 
 		if len(result.Messages) > 0 {
 			for _, message := range result.Messages {
-				var snsMessage utils.SNSSQSMessage
+				var snsMessage payload.SNSSQSMessage
 
 				err := json.Unmarshal([]byte(*message.Body), &snsMessage)
 				if err != nil {

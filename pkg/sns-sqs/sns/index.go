@@ -6,10 +6,10 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/utils"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func Send(config *utils.SNSSQSMessage) {
+func Send(config *payload.SNSSQSMessage) {
 	sess := session.Must(session.NewSession(&aws.Config{
 		Endpoint: config.Endpoint,
 		Region:   config.Region,
