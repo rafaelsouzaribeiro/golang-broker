@@ -11,7 +11,7 @@ run docker container:<br /><br/>
 `sudo docker container run -it -d -p 4566:4566 localstack/localstack start`<br />
 
 
-<h1>How to configure the local environment?</h1><br />
+<h1>How can I set up the local development environment?</h1><br />
 
 `aws configure`<br />
 	AWS Access Key ID [None]: fakeAccessKeyId <br />
