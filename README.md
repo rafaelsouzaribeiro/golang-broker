@@ -7,8 +7,8 @@ install <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-starte
 <br />
 
 install docker container:<br /><br/>
-sudo docker pull localstack/localstack<br />
-sudo docker container run -it -d -p 4566:4566 localstack/localstack start<br />
+`sudo docker pull localstack/localstack`<br />
+`sudo docker container run -it -d -p 4566:4566 localstack/localstack start`<br />
 
 
 <h1>How to configure the local environment?</h1><br />
