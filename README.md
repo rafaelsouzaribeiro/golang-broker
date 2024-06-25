@@ -11,17 +11,17 @@ sudo docker pull localstack/localstack<br />
 sudo docker container run -it -d -p 4566:4566 localstack/localstack start<br />
 
 aws configure<br />
-	AWS Access Key ID [None]: fakeAccessKeyId 
-	AWS Secret Access Key [None]: fakeSecretAccessKey
-	Default region name [us-east-1]: us-east-1
-	Default output format [None]: json
+	AWS Access Key ID [None]: fakeAccessKeyId <br />
+	AWS Secret Access Key [None]: fakeSecretAccessKey<br />
+	Default region name [us-east-1]: us-east-1<br />
+	Default output format [None]: json<br />
     
 
 aws configure --profile localstack<br />
-	AWS Access Key ID [None]: nome_perfil_novo
-	AWS Secret Access Key [None]: senha_perfil_novo
-	Default region name [None]: us-east-1
-	Default output format [None]: json
+	AWS Access Key ID [None]: nome_perfil_novo<br />
+	AWS Secret Access Key [None]: senha_perfil_novo<br />
+	Default region name [None]: us-east-1<br />
+	Default output format [None]: json<br />
 </p>
 <p>
 Create topic:<br/>
