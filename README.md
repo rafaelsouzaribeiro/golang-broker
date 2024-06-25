@@ -24,18 +24,18 @@ aws configure --profile localstack<br />
 	Default output format [None]: json<br />
 </p>
 <p>
-Create topic:<br/>
+Create topic:<br/><br/>
 aws --endpoint-url=http://localhost:4566 sns create-topic --name my-topic
-<br />
+<br /><br/>
 Create queue
-<br />
+<br /><br/>
 aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name my-queue --region us-east-1
-<br />
+<br /><br/>
 Create QueueArn
-<br />
+<br /><br/>
 aws --endpoint-url=http://localhost:4566 sqs get-queue-attributes --queue-url http://localhost:4566/000000000000/my-queue --attribute-names QueueArn --region us-east-1
-<br />
+<br /><br/>
 Subscribe SNS Topic to SQS Queue Endpoint
-<br />
+<br /><br/>
 aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn $TOPIC_ARN --protocol sqs --notification-endpoint $QUEUE_ARN --region us-east-1
 </p>
