@@ -6,18 +6,18 @@
 install <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html" title="aws cli">aws cli</a> 
 <br />
 
-install docker container:<br />
+install docker container:<br /><br/>
 sudo docker pull localstack/localstack<br />
 sudo docker container run -it -d -p 4566:4566 localstack/localstack start<br />
 
-aws configure<br />
+aws configure<br /><br/>
 	AWS Access Key ID [None]: fakeAccessKeyId <br />
 	AWS Secret Access Key [None]: fakeSecretAccessKey<br />
 	Default region name [us-east-1]: us-east-1<br />
 	Default output format [None]: json<br />
     
 
-aws configure --profile localstack<br />
+aws configure --profile localstack<br /><br/>
 	AWS Access Key ID [None]: nome_perfil_novo<br />
 	AWS Secret Access Key [None]: senha_perfil_novo<br />
 	Default region name [None]: us-east-1<br />
