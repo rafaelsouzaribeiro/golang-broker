@@ -6,7 +6,7 @@
 install <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html" title="aws cli">aws cli</a> 
 <br />
 
-install docker container:<br /><br/>
+run docker container:<br /><br/>
 `sudo docker pull localstack/localstack`<br />
 `sudo docker container run -it -d -p 4566:4566 localstack/localstack start`<br />
 
