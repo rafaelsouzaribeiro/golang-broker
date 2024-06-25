@@ -12,14 +12,14 @@ sudo docker container run -it -d -p 4566:4566 localstack/localstack start<br />
 
 
 <h1>How to configure the local environment?</h1><br />
-<code>
+
 aws configure<br />
 	AWS Access Key ID [None]: fakeAccessKeyId <br />
 	AWS Secret Access Key [None]: fakeSecretAccessKey<br />
 	Default region name [us-east-1]: us-east-1<br />
 	Default output format [None]: json<br />
     
-</code>
+
 aws configure --profile localstack<br />
 	AWS Access Key ID [None]: nome_perfil_novo<br />
 	AWS Secret Access Key [None]: senha_perfil_novo<br />
