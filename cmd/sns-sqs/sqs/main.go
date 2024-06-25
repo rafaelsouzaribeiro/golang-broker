@@ -17,7 +17,7 @@ func main() {
 
 	messageChan := make(chan utils.SNSSQSMessage)
 
-	go sqs.Receive(configs, messageChan)
+	go sqs.Receive(&configs, messageChan)
 
 	for message := range messageChan {
 		fmt.Printf("Received message: %s Message Id: %s Topic: %s Time: %s\n",

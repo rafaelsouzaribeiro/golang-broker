@@ -20,7 +20,7 @@ func main() {
 	wg.Add(1)
 
 	go func() {
-		sns.Send(configs)
+		sns.Send(&configs)
 		wg.Done()
 	}()
 
