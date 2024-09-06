@@ -8,7 +8,6 @@ import (
 
 const (
 	APACHE_KAFKA_CONSUMER = "apache_kafka_consumer"
-	SQS                   = "sqs"
 )
 
 func IConsumerBroker(types string, broker *[]string, data *payload.Message, channel chan<- payload.Message) types.IbrokerKafkaConsumer {
