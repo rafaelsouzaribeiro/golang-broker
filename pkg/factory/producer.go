@@ -9,6 +9,7 @@ import (
 
 const (
 	APACHE_KAFKA_PRODUCER = "apache_kafka_producer"
+	SNS                   = "sns"
 )
 
 func IProducerBroker(types string, addrs *[]string, message *payload.Message, config *sarama.Config, callback producer.MessageCallback) types.IbrokerKafkaProducer {
