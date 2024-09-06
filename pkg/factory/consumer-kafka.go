@@ -11,7 +11,7 @@ const (
 	SNS_SQS               = "sns_sqs"
 )
 
-func INewBroker(types string, broker *[]string, data *payload.Message, channel chan<- payload.Message) types.IbrokerKafkaConsumer {
+func IConsumerBroker(types string, broker *[]string, data *payload.Message, channel chan<- payload.Message) types.IbrokerKafkaConsumer {
 
 	switch types {
 	case APACHE_KAFKA_CONSUMER:

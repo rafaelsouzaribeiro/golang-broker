@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/apache-kafka/producer"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/factory"
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
@@ -37,10 +38,11 @@ func Producer() {
 		},
 	}
 
-	produc := producer.NewProducer(&[]string{"springboot:9092"}, &message, producer.GetConfig(), func(messages payload.Message) {
+	pro := factory.IProducerBroker(factory.APACHE_KAFKA_PRODUCER, &[]string{"springboot:9092"}, &message, producer.GetConfig(), func(messages payload.Message) {
 		fmt.Printf("message failure: %s, topic failure: %s, partition failure: %d \n", messages.Value, messages.Topic, messages.Partition)
 	})
-	prod, err := produc.GetProducer()
+
+	prod, err := pro.GetProducer()
 
 	if err != nil {
 		panic(err)
@@ -52,6 +54,6 @@ func Producer() {
 		}
 	}()
 
-	produc.SendMessage(prod)
+	pro.SendMessage(prod)
 
 }
