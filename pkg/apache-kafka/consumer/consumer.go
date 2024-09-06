@@ -9,7 +9,7 @@ import (
 )
 
 type ExampleConsumerGroupHandler struct {
-	Channel chan payload.Message
+	Channel chan<- payload.Message
 }
 
 func (*ExampleConsumerGroupHandler) Setup(sarama.ConsumerGroupSession) error {

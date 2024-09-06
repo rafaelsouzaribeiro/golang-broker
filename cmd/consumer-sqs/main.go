@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/apache-kafka/consumer"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/factory"
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
@@ -17,8 +17,9 @@ func main() {
 		Offset:    -1,
 	}
 	canal := make(chan payload.Message)
-	go consumer.Consumer(&[]string{"springboot:9092"}, &data, canal)
-	go consumer.ListenPartition(&[]string{"springboot:9092"}, &data, canal)
+	broker := factory.INewBroker(factory.APACHE_KAFKA_CONSUMER, &[]string{"springboot:9092"}, &data, canal)
+	go broker.Consumer()
+	go broker.ListenPartition()
 
 	for msgs := range canal {
 		printMessage(&msgs)

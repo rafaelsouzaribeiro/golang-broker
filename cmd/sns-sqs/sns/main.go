@@ -1,29 +1,29 @@
 package main
 
-import (
-	"sync"
+// import (
+// 	"sync"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/sns-sqs/sns"
-)
+// 	"github.com/aws/aws-sdk-go/aws"
+// 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
+// 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/sns-sqs/sns"
+// )
 
-func main() {
-	configs := payload.SNSSQSMessage{
-		Endpoint: aws.String("http://localhost:4566"),
-		Region:   aws.String("us-east-1"),
-		Message:  "Message Test",
-		TopicArn: "arn:aws:sns:us-east-1:000000000000:my-topic",
-	}
+// func main() {
+// 	configs := payload.SNSSQSMessage{
+// 		Endpoint: aws.String("http://localhost:4566"),
+// 		Region:   aws.String("us-east-1"),
+// 		Message:  "Message Test",
+// 		TopicArn: "arn:aws:sns:us-east-1:000000000000:my-topic",
+// 	}
 
-	var wg sync.WaitGroup
-	wg.Add(1)
+// 	var wg sync.WaitGroup
+// 	wg.Add(1)
 
-	go func() {
-		sns.Send(&configs)
-		wg.Done()
-	}()
+// 	go func() {
+// 		sns.Send(&configs)
+// 		wg.Done()
+// 	}()
 
-	wg.Wait()
+// 	wg.Wait()
 
-}
+// }

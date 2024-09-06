@@ -6,21 +6,20 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func Send(config *payload.SNSSQSMessage) {
+func (b *Broker) Send() {
 	sess := session.Must(session.NewSession(&aws.Config{
-		Endpoint: config.Endpoint,
-		Region:   config.Region,
+		Endpoint: b.Config.Endpoint,
+		Region:   b.Config.Region,
 	}))
 
 	svc := sns.New(sess)
-	message := config.Message
+	message := b.Config.Message
 
 	publishParams := &sns.PublishInput{
 		Message:  aws.String(message),
-		TopicArn: aws.String(config.TopicArn),
+		TopicArn: aws.String(b.Config.TopicArn),
 	}
 
 	result, err := svc.Publish(publishParams)

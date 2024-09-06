@@ -4,12 +4,11 @@ import (
 	"context"
 
 	"github.com/IBM/sarama"
-	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func Consumer(broker *[]string, data *payload.Message, channel chan payload.Message) {
+func (b *Broker) Consumer() {
 
-	group, err := sarama.NewConsumerGroup(*broker, data.GroupID, GetConfig())
+	group, err := sarama.NewConsumerGroup(*b.broker, b.data.GroupID, GetConfig())
 	if err != nil {
 		panic(err)
 	}
@@ -17,10 +16,10 @@ func Consumer(broker *[]string, data *payload.Message, channel chan payload.Mess
 	ctx := context.Background()
 
 	handler := &ExampleConsumerGroupHandler{
-		Channel: channel,
+		Channel: b.channel,
 	}
 
-	errs := group.Consume(ctx, *data.Topics, handler)
+	errs := group.Consume(ctx, *b.data.Topics, handler)
 	if errs != nil {
 		panic(errs)
 	}

@@ -5,15 +5,15 @@ import (
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func ListenPartition(broker *[]string, data *payload.Message, message chan<- payload.Message) {
+func (b *Broker) ListenPartition() {
 
-	consumer, err := sarama.NewConsumer(*broker, GetConfig())
+	consumer, err := sarama.NewConsumer(*b.broker, GetConfig())
 
 	if err != nil {
 		panic(err)
 	}
 
-	pc, err := consumer.ConsumePartition(data.Topic, data.Partition, data.Offset)
+	pc, err := consumer.ConsumePartition(b.data.Topic, b.data.Partition, b.data.Offset)
 
 	if err != nil {
 		panic(err)
@@ -27,9 +27,9 @@ func ListenPartition(broker *[]string, data *payload.Message, message chan<- pay
 			listHeaders = append(listHeaders, header)
 		}
 
-		message <- payload.Message{
+		b.channel <- payload.Message{
 			Topic:     msgs.Topic,
-			GroupID:   data.GroupID,
+			GroupID:   b.data.GroupID,
 			Value:     string(msgs.Value),
 			Key:       string(msgs.Key),
 			Partition: msgs.Partition,
