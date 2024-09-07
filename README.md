@@ -48,45 +48,45 @@ Subscribe SNS Topic to SQS Queue Endpoint
 Sqs:
 
 ```go
-	configs := payload.SNSSQSMessage{
-		Endpoint: aws.String("http://localhost:4566"),
-		Region:   aws.String("us-east-1"),
-		QueueURL: "http://localhost:4566/000000000000/my-queue",
-	}
+configs := payload.SNSSQSMessage{
+	Endpoint: aws.String("http://localhost:4566"),
+	Region:   aws.String("us-east-1"),
+	QueueURL: "http://localhost:4566/000000000000/my-queue",
+}
 
-	messageChan := make(chan payload.SNSSQSMessage)
+messageChan := make(chan payload.SNSSQSMessage)
 
-	factory := factory.ISQSBroker(&configs, messageChan)
-	go factory.Receive()
+factory := factory.ISQSBroker(&configs, messageChan)
+go factory.Receive()
 
-	for message := range messageChan {
-		fmt.Printf("Received message: %s Message Id: %s Topic: %s Time: %s\n",
-			message.Message, message.MessageId, message.TopicArn, message.Timestamp)
-	}
+for message := range messageChan {
+	fmt.Printf("Received message: %s Message Id: %s Topic: %s Time: %s\n",
+		message.Message, message.MessageId, message.TopicArn, message.Timestamp)
+}
 
-	select {}
+select {}
 	
 ```
 SNS:
 ```go
-	configs := payload.SNSSQSMessage{
-		Endpoint: aws.String("http://localhost:4566"),
-		Region:   aws.String("us-east-1"),
-		Message:  "Message Test",
-		TopicArn: "arn:aws:sns:us-east-1:000000000000:my-topic",
-	}
+configs := payload.SNSSQSMessage{
+	Endpoint: aws.String("http://localhost:4566"),
+	Region:   aws.String("us-east-1"),
+	Message:  "Message Test",
+	TopicArn: "arn:aws:sns:us-east-1:000000000000:my-topic",
+}
 
-	var wg sync.WaitGroup
-	wg.Add(1)
+var wg sync.WaitGroup
+wg.Add(1)
 
-	factory := factory.ISNSBroker(&configs)
+factory := factory.ISNSBroker(&configs)
 
-	go func() {
-		factory.Send()
-		wg.Done()
-	}()
+go func() {
+	factory.Send()
+	wg.Done()
+}()
 
-	wg.Wait()
+wg.Wait()
 ```
 <h1>To use apache Kafka, follow the code below:</h1>
 <br/>
