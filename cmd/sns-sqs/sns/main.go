@@ -19,7 +19,7 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 
-	factory := factory.ISNSBroker(factory.SNS, &configs)
+	factory := factory.ISNSBroker(&configs)
 
 	go func() {
 		factory.Send()

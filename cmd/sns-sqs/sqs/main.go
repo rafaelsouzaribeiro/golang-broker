@@ -17,7 +17,7 @@ func main() {
 
 	messageChan := make(chan payload.SNSSQSMessage)
 
-	factory := factory.ISQSBroker(factory.SQS, &configs, messageChan)
+	factory := factory.ISQSBroker(&configs, messageChan)
 	go factory.Receive()
 
 	for message := range messageChan {

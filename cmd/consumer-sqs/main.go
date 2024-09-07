@@ -17,7 +17,7 @@ func main() {
 		Offset:    -1,
 	}
 	canal := make(chan payload.Message)
-	broker := factory.IConsumerBroker(factory.APACHE_KAFKA_CONSUMER, &[]string{"springboot:9092"}, &data, canal)
+	broker := factory.IConsumerBroker(&[]string{"springboot:9092"}, &data, canal)
 	go broker.Consumer()
 	go broker.ListenPartition()
 

@@ -38,7 +38,7 @@ func Producer() {
 		},
 	}
 
-	pro := factory.IProducerBroker(factory.APACHE_KAFKA_PRODUCER, &[]string{"springboot:9092"}, &message, producer.GetConfig(), func(messages payload.Message) {
+	pro := factory.IProducerBroker(&[]string{"springboot:9092"}, &message, producer.GetConfig(), func(messages payload.Message) {
 		fmt.Printf("message failure: %s, topic failure: %s, partition failure: %d \n", messages.Value, messages.Topic, messages.Partition)
 	})
 

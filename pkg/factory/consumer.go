@@ -6,16 +6,8 @@ import (
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-const (
-	APACHE_KAFKA_CONSUMER = "apache_kafka_consumer"
-)
+func IConsumerBroker(broker *[]string, data *payload.Message, channel chan<- payload.Message) types.IbrokerKafkaConsumer {
 
-func IConsumerBroker(types string, broker *[]string, data *payload.Message, channel chan<- payload.Message) types.IbrokerKafkaConsumer {
+	return consumer.NewBroker(broker, data, channel)
 
-	switch types {
-	case APACHE_KAFKA_CONSUMER:
-		return consumer.NewBroker(broker, data, channel)
-	}
-
-	return nil
 }

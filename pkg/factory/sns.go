@@ -6,16 +6,8 @@ import (
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/sns-sqs/sns"
 )
 
-const (
-	SNS = "sns"
-)
+func ISNSBroker(config *payload.SNSSQSMessage) types.SNS {
 
-func ISNSBroker(types string, config *payload.SNSSQSMessage) types.SNS {
+	return sns.NewBroker(config)
 
-	switch types {
-	case SNS:
-		return sns.NewBroker(config)
-	}
-
-	return nil
 }
