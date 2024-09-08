@@ -1,11 +1,5 @@
 package apachekafka
 
-// type Broker struct {
-// 	broker  *[]string
-// 	data    *payload.Message
-// 	channel chan<- payload.Message
-// }
-
 type Broker struct {
 	broker string
 }
