@@ -1,4 +1,4 @@
-package sqs
+package snssqs
 
 import (
 	"encoding/json"
@@ -10,10 +10,10 @@ import (
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func (b *Broker) Receive() {
+func (b *Broker) Receive(MessageChan chan<- payload.SNSSQSMessage) {
 	sess := session.Must(session.NewSession(&aws.Config{
-		Endpoint: b.Configs.Endpoint,
-		Region:   b.Configs.Region,
+		Endpoint: b.Config.Endpoint,
+		Region:   b.Config.Region,
 	}))
 
 	svc := sqs.New(sess)
@@ -22,7 +22,7 @@ func (b *Broker) Receive() {
 
 		receiveMessageInput := &sqs.ReceiveMessageInput{
 			MaxNumberOfMessages: aws.Int64(1),
-			QueueUrl:            aws.String(b.Configs.QueueURL),
+			QueueUrl:            aws.String(b.Config.QueueURL),
 			WaitTimeSeconds:     aws.Int64(10),
 		}
 
@@ -41,10 +41,10 @@ func (b *Broker) Receive() {
 					log.Printf("Error decoding message: %v", err)
 				}
 
-				b.MessageChan <- snsMessage
+				MessageChan <- snsMessage
 
 				deleteMessageInput := &sqs.DeleteMessageInput{
-					QueueUrl:      aws.String(b.Configs.QueueURL),
+					QueueUrl:      aws.String(b.Config.QueueURL),
 					ReceiptHandle: message.ReceiptHandle,
 				}
 				_, errs := svc.DeleteMessage(deleteMessageInput)

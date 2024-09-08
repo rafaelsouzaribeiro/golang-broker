@@ -56,8 +56,8 @@ configs := payload.SNSSQSMessage{
 
 messageChan := make(chan payload.SNSSQSMessage)
 
-factory := factory.ISQSBroker(&configs, messageChan)
-go factory.Receive()
+factory := factory.ISQSSNSBroker(&configs)
+go factory.Receive(messageChan)
 
 for message := range messageChan {
 	fmt.Printf("Received message: %s Message Id: %s Topic: %s Time: %s\n",
@@ -79,7 +79,7 @@ configs := payload.SNSSQSMessage{
 var wg sync.WaitGroup
 wg.Add(1)
 
-factory := factory.ISNSBroker(&configs)
+factory := factory.ISQSSNSBroker(&configs)
 
 go func() {
 	factory.Send()
