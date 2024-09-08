@@ -1,21 +1,22 @@
-package producer
+package apachekafka
 
 import (
 	"fmt"
 
 	"github.com/IBM/sarama"
+	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
+func (p *Broker) SendMessage(producer *sarama.AsyncProducer, data *payload.Message) {
 
 	saramaMsg := &sarama.ProducerMessage{
-		Topic: p.message.Topic,
-		Value: sarama.ByteEncoder(p.message.Value),
+		Topic: data.Topic,
+		Value: sarama.ByteEncoder(data.Value),
 	}
 
-	if p.message.Headers != nil && len(*p.message.Headers) > 0 {
+	if data.Headers != nil && len(*data.Headers) > 0 {
 		var heds []sarama.RecordHeader
-		for _, obj := range *p.message.Headers {
+		for _, obj := range *data.Headers {
 			heds = append(heds, sarama.RecordHeader{
 				Key:   []byte(obj.Key),
 				Value: []byte(obj.Value),
@@ -30,7 +31,6 @@ func (p *Producer) SendMessage(producer *sarama.AsyncProducer) {
 	go func() {
 		for err := range (*producer).Errors() {
 			if err != nil {
-				p.callback(*p.GetErrorMessage())
 				fmt.Printf("Failed for message produced: %s \n", saramaMsg.Value)
 			}
 

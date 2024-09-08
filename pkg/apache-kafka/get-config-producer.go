@@ -1,8 +1,8 @@
-package producer
+package apachekafka
 
 import "github.com/IBM/sarama"
 
-func GetConfig() *sarama.Config {
+func GetConfigProducer() *sarama.Config {
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Retry.Max = 5

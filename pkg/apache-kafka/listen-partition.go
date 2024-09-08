@@ -1,19 +1,22 @@
-package consumer
+package apachekafka
 
 import (
+	"strings"
+
 	"github.com/IBM/sarama"
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func (b *Broker) ListenPartition() {
+func (b *Broker) ListenPartition(data *payload.Message, channel chan<- payload.Message) {
 
-	consumer, err := sarama.NewConsumer(*b.broker, GetConfig())
+	broker := strings.Split(b.broker, ",")
+	consumer, err := sarama.NewConsumer(broker, GetConfigConsumer())
 
 	if err != nil {
 		panic(err)
 	}
 
-	pc, err := consumer.ConsumePartition(b.data.Topic, b.data.Partition, b.data.Offset)
+	pc, err := consumer.ConsumePartition(data.Topic, data.Partition, data.Offset)
 
 	if err != nil {
 		panic(err)
@@ -27,9 +30,9 @@ func (b *Broker) ListenPartition() {
 			listHeaders = append(listHeaders, header)
 		}
 
-		b.channel <- payload.Message{
+		channel <- payload.Message{
 			Topic:     msgs.Topic,
-			GroupID:   b.data.GroupID,
+			GroupID:   data.GroupID,
 			Value:     string(msgs.Value),
 			Key:       string(msgs.Key),
 			Partition: msgs.Partition,

@@ -1,8 +1,8 @@
-package consumer
+package apachekafka
 
 import "github.com/IBM/sarama"
 
-func GetConfig() *sarama.Config {
+func GetConfigConsumer() *sarama.Config {
 	config := sarama.NewConfig()
 	config.Consumer.Return.Errors = true
 	config.Consumer.Offsets.Initial = sarama.OffsetOldest
