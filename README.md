@@ -103,9 +103,9 @@ func main() {
 		Offset:    -1,
 	}
 	canal := make(chan payload.Message)
-	broker := factory.IConsumerBroker(&[]string{"springboot:9092"}, &data, canal)
-	go broker.Consumer()
-	go broker.ListenPartition()
+	broker := factory.NewBroker(factory.Kafka, "springboot:9092")
+	go broker.Consumer(&data, canal)
+	go broker.ListenPartition(&data, canal)
 
 	for msgs := range canal {
 		printMessage(&msgs)
@@ -125,6 +125,7 @@ func printMessage(msgs *payload.Message) {
 		fmt.Printf("Key: %s, Value: %s\n", header.Key, header.Value)
 	}
 }
+
 ```
 
 Producer:
@@ -159,11 +160,8 @@ func Producer() {
 		},
 	}
 
-	pro := factory.IProducerBroker(&[]string{"springboot:9092"}, &message, producer.GetConfig(), func(messages payload.Message) {
-		fmt.Printf("message failure: %s, topic failure: %s, partition failure: %d \n", messages.Value, messages.Topic, messages.Partition)
-	})
-
-	prod, err := pro.GetProducer()
+	pro := factory.NewBroker(factory.Kafka, "springboot:9092")
+	prod, err := pro.GetProducer(apachekafka.GetConfigProducer())
 
 	if err != nil {
 		panic(err)
@@ -175,7 +173,8 @@ func Producer() {
 		}
 	}()
 
-	pro.SendMessage(prod)
+	pro.SendMessage(prod, &message)
 
 }
+
 ```
