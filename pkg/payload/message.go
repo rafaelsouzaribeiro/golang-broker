@@ -5,15 +5,15 @@ import (
 )
 
 type Message struct {
-	Topics    *[]string
-	Topic     string
-	GroupID   string
-	Value     string
-	Partition int32
-	Key       string
-	Headers   *[]Header
-	Time      time.Time
-	Offset    int64
+	Topics    *[]string `json:"topics"`
+	Topic     string    `json:"topic"`
+	GroupID   string    `json:"group_id"`
+	Value     []byte    `json:"value"`
+	Partition int32     `json:"partition"`
+	Key       []byte    `json:"key"`
+	Headers   *[]Header `json:"header"`
+	Time      time.Time `json:"time"`
+	Offset    int64     `json:"offset"`
 }
 
 type Header struct {

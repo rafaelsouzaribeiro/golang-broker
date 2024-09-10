@@ -33,8 +33,8 @@ func (b *Broker) ListenPartition(data *payload.Message, channel chan<- payload.M
 		channel <- payload.Message{
 			Topic:     msgs.Topic,
 			GroupID:   data.GroupID,
-			Value:     string(msgs.Value),
-			Key:       string(msgs.Key),
+			Value:     msgs.Value,
+			Key:       msgs.Key,
 			Partition: msgs.Partition,
 			Headers:   &listHeaders,
 			Time:      msgs.Timestamp,

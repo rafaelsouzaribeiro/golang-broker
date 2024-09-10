@@ -8,10 +8,10 @@ import (
 func UpdateKafkaMessage(msg *sarama.ConsumerMessage) *payload.Message {
 
 	message := payload.Message{
-		Value:     string(msg.Value),
+		Value:     msg.Value,
 		Topic:     msg.Topic,
 		Partition: msg.Partition,
-		Key:       string(msg.Key),
+		Key:       msg.Key,
 		Time:      msg.Timestamp,
 	}
 

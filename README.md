@@ -146,7 +146,7 @@ func main() {
 func Producer() {
 
 	message := payload.Message{
-		Value: "Testar",
+		Value: []byte("Testar"),
 		Topic: "contact-adm-insert",
 		Headers: &[]payload.Header{
 			{
@@ -165,4 +165,76 @@ func Producer() {
 
 }
 
+```
+
+<h1>To use Redis, follow the code below:</h1>
+<br/>
+Consumer:
+
+```go
+func main() {
+
+	data := payload.Message{
+		Topics: &[]string{"contact-adm-insert", "testar"},
+	}
+	canal := make(chan payload.Message)
+	broker := factory.NewBroker(factory.Redis, "springboot:6379")
+	go broker.Consumer(&data, canal)
+
+	for msgs := range canal {
+		printMessage(&msgs)
+	}
+
+	close(canal)
+
+	select {}
+
+}
+
+func printMessage(msgs *payload.Message) {
+	fmt.Printf("topic: %s, Message: %s\n", msgs.Topic, msgs.Value)
+
+	println("Headers:")
+	for _, header := range *msgs.Headers {
+		fmt.Printf("Key: %s, Value: %s\n", header.Key, header.Value)
+	}
+}
+```
+
+Producer:
+
+```go
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		Producer()
+		wg.Done()
+	}()
+
+	wg.Wait()
+}
+
+func Producer() {
+
+	message := payload.Message{
+		Value: []byte("testar"),
+		Topic: "contact-adm-insert",
+		Headers: &[]payload.Header{
+			{
+				Key:   "your-header-key1",
+				Value: "your-header-value1",
+			},
+			{
+				Key:   "your-header-key2",
+				Value: "your-header-value2",
+			},
+		},
+	}
+
+	pro := factory.NewBroker(factory.Redis, "springboot:6379")
+	pro.SendMessage(&message)
+
+}
 ```

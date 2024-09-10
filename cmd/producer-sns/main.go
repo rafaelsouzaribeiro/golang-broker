@@ -22,7 +22,7 @@ func main() {
 func Producer() {
 
 	message := payload.Message{
-		Value: "Testar",
+		Value: []byte("Testar"),
 		Topic: "contact-adm-insert",
 		Headers: &[]payload.Header{
 			{
