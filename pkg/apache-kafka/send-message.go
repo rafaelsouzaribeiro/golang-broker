@@ -7,7 +7,19 @@ import (
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
 
-func (p *Broker) SendMessage(producer *sarama.AsyncProducer, data *payload.Message) {
+func (p *Broker) SendMessage(data *payload.Message) {
+
+	producer, err := GetProducer(GetConfigProducer(), p.broker)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer func() {
+		if err := (*producer).Close(); err != nil {
+			panic(err)
+		}
+	}()
 
 	saramaMsg := &sarama.ProducerMessage{
 		Topic: data.Topic,

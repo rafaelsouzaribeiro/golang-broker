@@ -6,9 +6,9 @@ import (
 	"github.com/IBM/sarama"
 )
 
-func (p *Broker) GetProducer(config *sarama.Config) (*sarama.AsyncProducer, error) {
+func GetProducer(config *sarama.Config, broker string) (*sarama.AsyncProducer, error) {
 
-	addrs := strings.Split(p.broker, ",")
+	addrs := strings.Split(broker, ",")
 	producer, err := sarama.NewAsyncProducer(addrs, config)
 
 	if err != nil {

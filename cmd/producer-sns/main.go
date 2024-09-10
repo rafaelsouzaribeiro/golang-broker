@@ -3,7 +3,6 @@ package main
 import (
 	"sync"
 
-	apachekafka "github.com/rafaelsouzaribeiro/golang-broker/pkg/apache-kafka"
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/factory"
 	"github.com/rafaelsouzaribeiro/golang-broker/pkg/payload"
 )
@@ -38,18 +37,6 @@ func Producer() {
 	}
 
 	pro := factory.NewBroker(factory.Kafka, "springboot:9092")
-	prod, err := pro.GetProducer(apachekafka.GetConfigProducer())
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer func() {
-		if err := (*prod).Close(); err != nil {
-			panic(err)
-		}
-	}()
-
-	pro.SendMessage(prod, &message)
+	pro.SendMessage(&message)
 
 }
