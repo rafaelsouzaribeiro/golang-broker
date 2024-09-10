@@ -161,19 +161,7 @@ func Producer() {
 	}
 
 	pro := factory.NewBroker(factory.Kafka, "springboot:9092")
-	prod, err := pro.GetProducer(apachekafka.GetConfigProducer())
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer func() {
-		if err := (*prod).Close(); err != nil {
-			panic(err)
-		}
-	}()
-
-	pro.SendMessage(prod, &message)
+	pro.SendMessage(&message)
 
 }
 
