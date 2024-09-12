@@ -29,3 +29,8 @@ services:
     volumes:
       - /mnt/docker/volumes/redis:/data
     env_file: cmd/.env 
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
