@@ -27,5 +27,5 @@ services:
         - -c
         - redis-server --requirepass "$${PASSWORD_REDIS:?PASSWORD_REDIS variable is not set}"
     volumes:
-       - /home/rafel/volumes/redis:/data
+      - /mnt/docker/volumes/redis:/data
     env_file: cmd/.env 
