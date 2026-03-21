@@ -28,9 +28,19 @@ services:
         - redis-server --requirepass "$${PASSWORD_REDIS:?PASSWORD_REDIS variable is not set}"
     volumes:
       - /mnt/docker/volumes/redis:/data
-    env_file: cmd/.env 
+    env_file: .env 
   localstack:
     image: localstack/localstack:latest
     container_name: localstack
     ports:
       - "4566:4566"
+  rabbitmq:
+    image: rabbitmq:3.8.16-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "15692:15692"
+    env_file:
+      - .env

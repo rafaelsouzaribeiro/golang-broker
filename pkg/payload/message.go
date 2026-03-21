@@ -2,6 +2,8 @@ package payload
 
 import (
 	"time"
+
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 type Message struct {
@@ -32,4 +34,14 @@ type SNSSQSMessage struct {
 	Endpoint         *string
 	Region           *string
 	QueueURL         string
+}
+
+type RabbitMQMessage struct {
+	Exchange   string
+	RoutingKey string
+	Value      []byte
+	Header     string
+	QueueName  string
+	Channel    *amqp.Channel
+	Msgs       chan *amqp.Delivery
 }

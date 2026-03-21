@@ -90,21 +90,18 @@ wg.Wait()
 ```
 <h1>To use apache Kafka, follow the code below:</h1>
 <br/>
-Consumer:
+Consumer with a single topic:
 
 ```go
 func main() {
 
 	data := payload.Message{
-		Topics:    &[]string{"contact-adm-insert", "testar"},
 		Topic:     "contact-adm-insert",
-		GroupID:   "contacts",
 		Partition: 0,
 		Offset:    -1,
 	}
 	canal := make(chan payload.Message)
-	broker := factory.NewBroker(factory.Kafka, "springboot:9092")
-	go broker.Consumer(&data, canal)
+	broker := factory.NewBroker(factory.Kafka, "localhost:9092")
 	go broker.ListenPartition(&data, canal)
 
 	for msgs := range canal {
@@ -112,8 +109,6 @@ func main() {
 	}
 
 	close(canal)
-
-	select {}
 
 }
 
@@ -127,23 +122,59 @@ func printMessage(msgs *payload.Message) {
 }
 
 ```
+<br/>
+Consumer with multiple topics and group ID:
 
+```go
+func main() {
+
+	data := payload.Message{
+		Topics:    &[]string{"testar", "contact-adm-insert"},
+		GroupID:   "contacts",
+		Partition: 0,
+		Offset:    -1,
+	}
+	canal := make(chan payload.Message)
+	broker := factory.NewBroker(factory.Kafka, "localhost:9092")
+	go broker.Consumer(&data, canal)
+
+	for msgs := range canal {
+		printMessage(&msgs)
+	}
+
+	close(canal)
+
+}
+
+
+func printMessage(msgs *payload.Message) {
+	fmt.Printf("topic: %s, Message: %s, Partition: %d, Key: %s, time: %s\n", msgs.Topic, msgs.Value, msgs.Partition, msgs.Key, msgs.Time.Format("2006-01-02 15:04:05"))
+
+	println("Headers:")
+	for _, header := range *msgs.Headers {
+		fmt.Printf("Key: %s, Value: %s\n", header.Key, header.Value)
+	}
+}
+
+```
+<br/>
 Producer:
 
 ```go
+
 func main() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 
 	go func() {
-		Producer()
-		wg.Done()
+		Producer(&wg)
 	}()
 
 	wg.Wait()
 }
 
-func Producer() {
+func Producer(wg *sync.WaitGroup) {
+	defer wg.Done()
 
 	message := payload.Message{
 		Value: []byte("Testar"),
@@ -160,7 +191,7 @@ func Producer() {
 		},
 	}
 
-	pro := factory.NewBroker(factory.Kafka, "springboot:9092")
+	pro := factory.NewBroker(factory.Kafka, "localhost:9092")
 	pro.SendMessage(&message)
 
 }
@@ -178,7 +209,7 @@ func main() {
 		Topics: &[]string{"contact-adm-insert", "testar"},
 	}
 	canal := make(chan payload.Message)
-	broker := factory.NewBroker(factory.Redis, "springboot:6379")
+	broker := factory.NewBroker(factory.Redis, "localhost:6379")
 	go broker.Consumer(&data, canal)
 
 	for msgs := range canal {
@@ -209,14 +240,14 @@ func main() {
 	wg.Add(1)
 
 	go func() {
-		Producer()
-		wg.Done()
+		Producer(&wg)		
 	}()
 
 	wg.Wait()
 }
 
-func Producer() {
+func Producer(wg *sync.WaitGroup) {
+	defer wg.Done()
 
 	message := payload.Message{
 		Value: []byte("testar"),
@@ -233,8 +264,75 @@ func Producer() {
 		},
 	}
 
-	pro := factory.NewBroker(factory.Redis, "springboot:6379")
+	pro := factory.NewBroker(factory.Redis, "localhost:6379")
 	pro.SendMessage(&message)
+
+}
+```
+
+<h1>To use Rabbitmq, follow the code below:</h1>
+<br/>
+
+Consumer:
+
+```go
+func main() {
+	godotenv.Load()
+	broker := factory.IRabbitMQBroker()
+
+	channel, err := broker.OpenChannel()
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer channel.Close()
+
+	ch := make(chan *amqp.Delivery)
+	payload := payload.RabbitMQMessage{
+		QueueName: "test-queue",
+		Channel:   channel,
+		Msgs:      ch,
+	}
+
+	go broker.Consume(&payload)
+
+	for msg := range payload.Msgs {
+		fmt.Println(string(msg.Body))
+
+		if value, ok := msg.Headers["header"].(string); ok {
+			fmt.Printf("Header:%s", value)
+		}
+
+		msg.Ack(false)
+	}
+
+	close(payload.Msgs)
+
+}
+```
+
+Producer:
+
+```go
+func main() {
+	godotenv.Load()
+	broker := factory.IRabbitMQBroker()
+	channel, err := broker.OpenChannel()
+
+	if err != nil {
+		panic(err)
+	}
+	defer channel.Close()
+	payload := payload.RabbitMQMessage{
+		Channel:    channel,
+		Exchange:   "amq.direct",
+		RoutingKey: "test-routing-key",
+		Value:      []byte("Test message"),
+		Header:     "Header value",
+	}
+
+	broker.Publish(&payload)
 
 }
 ```
